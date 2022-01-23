@@ -5,6 +5,7 @@ from .pre_processing_substitution import remove_strings, substitution
 from .pre_processing_multiple import multiple_quantities_main
 from .core import text_list_to_quantity
 from .post_processing import remove_duplicates
+from .logger import logger
 
 
 def parser(text_in: str, remove_string: list[str] = None) -> Union[Quantity, list[Quantity], list[list[Quantity]]]:
@@ -24,6 +25,7 @@ def parser(text_in: str, remove_string: list[str] = None) -> Union[Quantity, lis
     output: Quantity, list[Quantity], list[list[Quantity]]
 
     """
+    logger.info(f"INPUT: {text_in}")
     # type check
     if not isinstance(text_in, str):
         raise TypeError(f"'text_in' must be a string. Given {text_in} (type: {type(text_in)}")
@@ -52,4 +54,5 @@ def parser(text_in: str, remove_string: list[str] = None) -> Union[Quantity, lis
     if isinstance(out, list) and len(out) == 1:
         out = out[0]
 
+    logger.info(f"OUTPUT: {out}")
     return out
