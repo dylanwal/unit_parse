@@ -1,0 +1,36 @@
+[build-system]
+requires = [
+    "setuptools>=42",
+    "wheel"
+    ]
+build-backend = "setuptools.build_meta"
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "--cov=unit_parse --cov-report term-missing --cov-report html"
+testpaths = [
+    "tests"
+    ]
+
+[coverage]
+exclude_lines = [
+    "pragma: no cover",
+    "def _str__",
+    "def __repr__",
+    "if __name__ == .__main__.:"
+    ]
+
+[tool.mypy]
+mypy_path = "src"
+check_untyped_defs = true
+disallow_any_generics = true
+ignore_missing_imports = true
+no_implicit_optional = true
+show_error_codes = true
+strict_equality = true
+strict_optional = false
+warn_redundant_casts = true
+warn_return_any = true
+warn_unreachable = true
+warn_unused_configs = true
+no_implicit_reexport = true
