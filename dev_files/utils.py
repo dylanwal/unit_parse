@@ -41,6 +41,7 @@ testing_func(sig_figs, test_round_off)
 test_list_depth = [  # [Input, Output]
     # positive control (works)
     ["", 0],
+    [[], 0],
     ["asds", 0],
     [1, 0],
     [["aaa"], 1],
@@ -53,3 +54,20 @@ test_list_depth = [  # [Input, Output]
 
 ]
 testing_func(get_list_depth, test_list_depth)
+
+
+test_remove_empty_cells = [  # [Input, Output]
+    # positive control (works)
+    [[], None],
+    [[""], None],
+    [["asds"], ["asds"]],
+    [1, 1],
+    [["aaa", ""], ["aaa"]],
+    [["aaa", []], ["aaa"]],
+    [[["aaa", []]], [["aaa"]]],
+    [[["aaa", [""]]], [["aaa"]]],
+
+    # negative control (fails)
+
+]
+testing_func(remove_empty_cells, test_remove_empty_cells)

@@ -107,7 +107,46 @@ def split_list(text_split: List[Union[str, Any]], chunks: Union[str, List[str]],
 
 def get_list_depth(list_) -> int:
     """ Get the number of nesting of list """
-    if isinstance(list_, list):
+    if isinstance(list_, list) and len(list_) >= 1:
         return 1 + max(get_list_depth(item) for item in list_)
     else:
         return 0
+
+
+def remove_empty_cells(obj: list[str]):
+    """ remove empty cells
+
+    Used to remove [], [""], and "" from nested lists.
+
+    Parameters
+    ----------
+    obj: Any
+
+    Returns
+    -------
+    output: Any
+
+    """
+    if not isinstance(obj, list):
+        return obj
+    if obj == []:
+        return None
+
+    out = []
+    for ob in obj:
+        if isinstance(ob, list):
+            result = remove_empty_cells(ob)
+            if result is not None:
+                out.append(result)
+
+        elif isinstance(ob, str) and ob == "":
+            continue
+
+        else:
+            out.append(ob)
+
+    # nothing was added to default list
+    if out == []:
+        return None
+
+    return out

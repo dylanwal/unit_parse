@@ -1,5 +1,6 @@
 import logging
-
+from unit_parse import Quantity
+from unit_parse.utils import quantity_approx_equal
 
 color_codes = {
     "reset": "\033[0m",  # add at the end to stop coloring
@@ -70,7 +71,11 @@ def testing_func(func, tests_stuff, kwarg=None):
         if len(t) == 3:
             kwargs = t[2]
         try:
-            assert output_ == (value := func(input_, **kwargs))
+            value = func(input_, **kwargs)
+            if isinstance(value, Quantity):
+                assert quantity_approx_equal(output_, value)
+            else:
+                assert output_ == value
         except AssertionError:
             test_logger.error(f"'{input_}' -> '{value}' (Expected: '{output_}')")
             continue

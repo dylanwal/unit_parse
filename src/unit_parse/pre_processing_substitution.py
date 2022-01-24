@@ -1,8 +1,8 @@
 from typing import List, Optional
 import re
 
-from . import config
-from .logger import log_debug, log_info
+from unit_parse.config import config
+from unit_parse.logger import log_debug, log_info
 
 
 @log_info
@@ -182,6 +182,10 @@ def sub_sci_notation(text_in: str) -> str:
         exp_new = exp.replace("E**", "*10**", 1)
         text_in = text_in.replace(exp, exp_new)
 
+    # remove leading zero in powers ( 5*10**-05 --> 5*10**-5)
+    text_in = re.sub('(?<=[*]{2}[-])0(?=[0-9])', "", text_in)  # neg. power
+    text_in = re.sub('(?<=[*]{2})0(?=[0-9])', "", text_in)  # pos. power
+
     return text_in.strip()
 
 
@@ -220,7 +224,7 @@ def remove_words(text_in: str, words: set[str]) -> str:
 
     result = []
     for text in split_text:
-        text_check = text.lower().replace(":", "").replace(",", "").replace(".", "")
+        text_check = text.lower().replace(":", "").replace(",", "").replace(".", "").replace("(", "").replace(")", "")
         if text_check not in words:
             result.append(text)
 

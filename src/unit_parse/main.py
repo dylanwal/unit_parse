@@ -1,11 +1,12 @@
 from typing import Union
 
-from .config import Quantity
-from .pre_processing_substitution import remove_strings, substitution
-from .pre_processing_multiple import multiple_quantities_main
-from .core import text_list_to_quantity
-from .post_processing import remove_duplicates
-from .logger import logger
+from unit_parse.config import Quantity
+from unit_parse.pre_processing_substitution import remove_strings, substitution
+from unit_parse.pre_processing_multiple import multiple_quantities_main
+from unit_parse.core import text_list_to_quantity
+from unit_parse.post_processing import remove_duplicates
+from unit_parse.utils import remove_empty_cells
+from unit_parse.logger import logger
 
 
 def parser(text_in: str, remove_string: list[str] = None) -> Union[Quantity, list[Quantity], list[list[Quantity]]]:
@@ -47,12 +48,14 @@ def parser(text_in: str, remove_string: list[str] = None) -> Union[Quantity, lis
 
     # post processing
     out = remove_duplicates(out)
+    out = remove_empty_cells(out)
 
     # return unit instead of list if just one
     if len(out) == 1:
-        out = out[0]
-    if isinstance(out, list) and len(out) == 1:
-        out = out[0]
+        if not isinstance(out[0], list):
+            out = out[0]
+        elif isinstance(out[0], list) and len(out[0]) == 1:
+            out = out[0][0]
 
     logger.info(f"OUTPUT: {out}'")
     return out

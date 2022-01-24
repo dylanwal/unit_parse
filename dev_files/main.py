@@ -41,6 +41,8 @@ examples = [
     ["2.3 gcm**3", Quantity("2.3 g*cm**3")],
     ["2.3 gcm**3", Quantity("2.3 g*cm^3")],
     ["2.3     g", Quantity("2.3 g")],
+    ['1.10*10**-05 atm-m**3/mole', Quantity('1.10*10**-5 atm*m**3/mole')],
+    ["-54.6e-5 atm-m**3/mole", Quantity("-54.6*10**-5 atm*m**3/mole")],
     ["2.3 mlgcm", Quantity("2.3 ml*g*cm")],
     ['42.3 gcm-3', Quantity('42.3 g*cm**-3')],
     ['42.3 g cm-3', Quantity('42.3 g*cm**-3')],
@@ -56,13 +58,14 @@ examples = [
     [")4.0 (°C)", Quantity("4 degC")],
     ["(4.0 (°C)", Quantity("4 degC")],
     ["()4.0 (°C)", Quantity("4 degC")],
-    ['4.0 °C [39.2 g/[mol * s]]', [Quantity("4 degC"), Quantity("39.2 g/(mol * s)")]],
+    ['4.0 °C [39.2 g/[mol * s]]', [[Quantity("4 degC"), Quantity("39.2 g/(mol * s)")]]],
 
     # conditions
-    ["37.34 kJ/mole (at 25 °C)", [Quantity("37.34 kJ/mole"), Quantity("25 degC")]],
-    ['20.8 mm Hg @ 25 °C', [Quantity('20.8 mmHg'), Quantity('25 degC')]],
-    ['20.8 mm Hg (25 °C)', [Quantity('20.8 mmHg'), Quantity('25 degC')]],
-    ['20.8 mm Hg at 25 °C', [Quantity('20.8 mmHg'), Quantity('25 degC')]],
+    ["37.34 kJ/mole (at 25 °C)", [[Quantity("37.34 kJ/mole"), Quantity("25 degC")]]],
+    ['20.8 mm Hg @ 25 °C', [[Quantity('20.8 mmHg'), Quantity('25 degC')]]],
+    ['20.8 mm Hg (25 °C)', [[Quantity('20.8 mmHg'), Quantity('25 degC')]]],
+    ['20.8 mm Hg at 25 °C', [[Quantity('20.8 mmHg'), Quantity('25 degC')]]],
+    ["-4,395.63 kJ/mol at 25 °C", [[Quantity('-4395.63 kJ/mol'), Quantity('25 degC')]]],
 
     # list of quantities
     ['18 mm Hg; 20 mm Hg', [Quantity('18 mmHg'), Quantity('20 mmHg')]],
@@ -82,16 +85,19 @@ examples = [
     ["8.20x10+1 ppm; pure", Quantity("8.20*10**1 ppm")],
     ['40 °F (NTP, 1992)', Quantity("40 degF")],
     ['4.0 °C (39.2 °F) - closed cup', Quantity("4 degC")],
-    ['4.0 °C [39.2 g/[mol * s]] - closed cup', [Quantity("4 degC"), Quantity("39.2 g/(mol * s)")]],
-    ['4.0 °C [39.2 g/[mol * s] approx.] - closed cup', [Quantity("4 degC"), Quantity("39.2 g/(mol * s)")]],
-    ['4.0 °C [39.2g/[mol*s] approx.] - closed cup', [Quantity("4 degC"), Quantity("39.2 g/(mol * s)")]],
-    ['4.0 °C [39.2g/[mol*s]approx.] - closed cup', [Quantity("4 degC"), Quantity("39.2 g/(mol * s)")]],
+    ['4.0 °C [39.2 g/[mol * s]] - closed cup', [[Quantity("4 degC"), Quantity("39.2 g/(mol * s)")]]],
+    ['4.0 °C [39.2 g/[mol * s] approx.] - closed cup', [[Quantity("4 degC"), Quantity("39.2 g/(mol * s)")]]],
+    ['4.0 °C [39.2g/[mol*s] approx.] - closed cup', [[Quantity("4 degC"), Quantity("39.2 g/(mol * s)")]]],
+    ['4.0 °C [39.2g/[mol*s]approx.] - closed cup', [[Quantity("4 degC"), Quantity("39.2 g/(mol * s)")]]],
     ['Detection in water: 0.73 ppm; Chemically pure', Quantity("0.73 part_per_million")],
     ['Odor Threshold Range: 0.15 to 25 ppm', Quantity("0.15 part_per_million")],
+    ["0.05 ppm purity specified", Quantity("0.05 part_per_million")],
+    ["Odor detection in air, 0.05 ppm (purity not specified)", Quantity("0.05 part_per_million")],
+    ["Relative density (water = 1): 1.04-1.13", Quantity("1.04")],
 
     # duplicates of same quantity different units
     ["4.0 °C (39.2 °F)", Quantity("4 degC")],
-    ['-14.390 BTU/LB= -7992 CAL/G= -334.6X10+5 J/KG', Quantity('-14.390 BTU/lb')],
+    ['-7991 cal/g = -334.6X10+5 J/KG', Quantity('-7991 cal/g')],
 
     # complex
     ['18 mm Hg at 68 °F ; 20 mm Hg at 77° F (NTP, 1992)', [[Quantity('18 mmHg'), Quantity('68 degF')],

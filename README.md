@@ -49,9 +49,41 @@ Pass string you want to parse to `parser()`.
 ```python
 from unit_parse import parser
 
-result = parser("37.34 kJ/mole (at 25 °C)")
-print(result)
+result = parser("1.23 g/cm3 (at 25 °C)")
+print(result) # [[Quantity("1.23 g/(cm**3)"), Quantity(25 deg)]
 ```
+'Quantity' are [pint quantities](https://pint.readthedocs.io/en/stable/defining-quantities.html). 
+
+### Output structure
+* **parse unsuccessful**: None
+* **Single value:** quantity
+    * `5 g/mol`
+* **Single value with condition:** [[quantity, condition]]  
+    * `[['25 degC', '1 bar']]`
+    * boil temperature is 25 at 1 bar of pressure
+* **Multiple values:**  [quantity, quantity, ...] 
+    * `[25 degC, 50 degC]`
+* **Multiple values with conditions:** [[quantity, condition], [quantity, condition], ...]
+    * `[['25 degC', '1 bar'], ['50 degC', '5 bar'], ['100 degC', '10 bar']]`
+
+### Merging Quantities
+
+Some times when you are doing parsing, you get multiple values from the parser. So it would be nice to reduce it 
+down just to one value/value+condition/series+condition. `reduce_quantities` does exactly that!
+
+It will group approximate equivalent quantities and throw out bad units (units that are not like the most common). 
+You can select your preference for return priority with the `order` parameter. 
+
+```python
+from unit_parse import Quantity, reduce_quantities
+  
+quantities = [Quantity("68 degree_Fahrenheit"), Quantity("68.0 degree_Fahrenheit"), Quantity("20.0 degree_Celsius"),
+              Quantity("293.15 kelvin * speed_of_light ** 2")]
+  
+result = reduce_quantities(quantities)
+print(result)  # Quantity("68 degF")],
+```
+
 
 ---
 ## Logging

@@ -1,1 +1,4 @@
-recursive-include src *.txt
+include src/unit_parse/support_files/constants_en.txt
+include src/unit_parse/support_files/default_en.txt
+include src/unit_parse/support_files/dictionary.txt
+
