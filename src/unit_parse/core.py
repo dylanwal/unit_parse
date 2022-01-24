@@ -145,7 +145,7 @@ def get_quantity(text_in: str) -> Union[Quantity, None]:
         If unsuccessful return None
 
     """
-    text_in = sub_general(text_in, config["last_minute_sub"])
+    text_in = sub_general(text_in, config.last_minute_sub)
     if not contains_number(text_in):
         return None
 
@@ -173,12 +173,12 @@ def to_quantity_expanded(text_in: str) -> Union[Quantity, None]:
     """
     value, text_value = get_value(text_in)
     if value is None:
-        logger.warning(f"No value found: {text_in}")
+        logger.warning(f"No value found: '{text_in}'")
         return None
 
-    unit = get_unit(re.sub(text_value, "", text_in))
+    unit = get_unit(text_in.replace(text_value, ""))
     if unit is None:
-        logger.warning(f"No unit found: {text_in} (value found: {value})")
+        logger.warning(f"No unit found: '{text_in}' (value found: '{value})'")
         return None
 
     return value * unit
@@ -248,7 +248,7 @@ def get_unit(text_in: str) -> Unit:
         if isinstance(obj, str) and obj != "/":
             result = frame_shift(obj)
             if result is None:
-                logger.warning(f"Parsing unit warning: skipped text: {obj} in {text_in}.")
+                logger.warning(f"Parsing unit warning: skipped text: '{obj}' in '{text_in}'")
             else:
                 reduced_list.append(result)
         else:

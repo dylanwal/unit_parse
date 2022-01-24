@@ -17,11 +17,13 @@ other sketchy website?
 Try 'Unit_Parse' to clean everything up for you!
 
 #### Description: 
+
 'Unit_Parse' is built on top of [Pint](https://github.com/hgrecco/pint). It was specifically designed to handle data 
 that was extracted from scientific work. It has been rigorously tested against chemistry data 
 extracted from Wikipida (example: [styrene](https://en.wikipedia.org/wiki/Styrene); density, melting point, boiling 
 point, etc.) and data from [PubChem](https://pubchem.ncbi.nlm.nih.gov/) 
 (example: [styrene](https://pubchem.ncbi.nlm.nih.gov/compound/Styrene) ; density, melting point, flash point, etc.).
+
 
 ---
 
@@ -42,6 +44,8 @@ pip install unit_parse
 
 ### Basics
 
+Pass string you want to parse to `parser()`.
+
 ```python
 from unit_parse import parser
 
@@ -52,14 +56,15 @@ print(result)
 ---
 ## Logging
 
-The logger can be used to track how a text that through the parsing steps.
+The logger can be used to track the parsing steps.
+
 Default level is warning.
 
 warning: will only let you know if there is any text that is being ignored in the parsing process.
 info: will show the major parsing steps.
 debug: will show fine grain parsing steps.
 
-### Example INFO
+### Example: INFO
 
 Code:
 
@@ -86,7 +91,7 @@ Output:
 [<Quantity(37.34, 'kilojoule / mole')>, <Quantity(25, 'degree_Celsius')>]
 ```
 
-### Example DEBUG
+### Example: DEBUG
 Code:
 
 ```python
@@ -97,12 +102,12 @@ from unit_parse import parser, logger
 logger.setLevel(logging.DEBUG)
 
 result = parser("37.34 kJ/mole (at 25 °C)")
-print(result)
+print(result)  # [<Quantity(37.34, 'kilojoule / mole')>, <Quantity(25, 'degree_Celsius')>] or [37.34 kJ/mole, 25 °C]
 ```
 
 Output:
 
-```
+```console
     INPUT: 37.34 kJ/mole (at 25 °C)
         sub_general: ('37.34 kJ/mole (at 25 °C)',) --> 37.34 kJ/mole ( @ 25 °C)
         sub_power: ('37.34 kJ/mole ( @ 25 °C)',) --> 37.34 kJ/mole ( @ 25 °C)
@@ -135,3 +140,16 @@ Yep, there's alot of them!
 
     # stuff
 ```
+
+
+
+---
+## Notes
+
+### Pint UnitRegistry
+Pint's requires a Unit Registry to be defined. However, Unit Registries are not interoperable and will throw 
+errors if a unit from one registry is used in another. Unit_Parse will go looking to see if one has been created, 
+and if it hasn't we will make one!
+
+So if your project uses Pint already, make sure you import Pint and define the UnitRegistry before importing unit_parse.
+    

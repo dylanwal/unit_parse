@@ -37,6 +37,7 @@ examples = [
 
     # messed up units/ units with powers
     ["2.3 gcm", Quantity("2.3 g*cm")],
+    ["5e5 gmol/s", Quantity("5*10**5 g*mol/s")],
     ["2.3 gcm**3", Quantity("2.3 g*cm**3")],
     ["2.3 gcm**3", Quantity("2.3 g*cm^3")],
     ["2.3     g", Quantity("2.3 g")],
@@ -85,6 +86,8 @@ examples = [
     ['4.0 °C [39.2 g/[mol * s] approx.] - closed cup', [Quantity("4 degC"), Quantity("39.2 g/(mol * s)")]],
     ['4.0 °C [39.2g/[mol*s] approx.] - closed cup', [Quantity("4 degC"), Quantity("39.2 g/(mol * s)")]],
     ['4.0 °C [39.2g/[mol*s]approx.] - closed cup', [Quantity("4 degC"), Quantity("39.2 g/(mol * s)")]],
+    ['Detection in water: 0.73 ppm; Chemically pure', Quantity("0.73 part_per_million")],
+    ['Odor Threshold Range: 0.15 to 25 ppm', Quantity("0.15 part_per_million")],
 
     # duplicates of same quantity different units
     ["4.0 °C (39.2 °F)", Quantity("4 degC")],
@@ -119,7 +122,7 @@ def pre_process_values():
 
 
 def testing():
-    testing_func(parser, examples, {"remove_string": delete_text})
+    testing_func(parser, examples)
 
 
 if __name__ == '__main__':

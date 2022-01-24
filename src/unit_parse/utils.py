@@ -1,7 +1,7 @@
 from typing import List, Any, Optional, Union
 import re
 
-from . import Quantity
+from .config import Quantity
 
 
 def quantity_approx_equal(quantity1: Quantity, quantity2: Quantity, cutoff: Optional[float] = 0.02) -> bool:
@@ -46,7 +46,6 @@ def remove_empty_str(list_in: List[Any]) -> List[Any]:
             out.append(obj)
 
     return out
-    # return list(filter(None, list_in))
 
 
 def contains_number(obj_in: str) -> bool:

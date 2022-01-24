@@ -54,5 +54,5 @@ def parser(text_in: str, remove_string: list[str] = None) -> Union[Quantity, lis
     if isinstance(out, list) and len(out) == 1:
         out = out[0]
 
-    logger.info(f"OUTPUT: {out}")
+    logger.info(f"OUTPUT: {out}'")
     return out

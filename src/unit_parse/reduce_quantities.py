@@ -1,7 +1,7 @@
 from typing import List, Union, Dict
 from enum import Enum, auto
 
-from . import Quantity
+from .config import Quantity
 from .utils import quantity_approx_equal, flatten_list
 
 
@@ -12,7 +12,7 @@ class QuantClass(Enum):
     SERIES_CONDITIONS = auto()
 
 
-def reduce_quantity_list(data_in: Union[Quantity, List[Quantity], List[List[Quantity]]]) -> Quantity:
+def reduce_quantities(data_in: Union[Quantity, List[Quantity], List[List[Quantity]]]) -> Quantity:
     if isinstance(data_in, Quantity) or data_in is None or data_in == []:
         return data_in
     if isinstance(data_in, List) and len(data_in) <= 1:
@@ -100,56 +100,3 @@ def _get_middle_quantity(data_in: Union[Quantity, List[Quantity]]) -> Quantity:
         data_in.pop(differance_list.index(max(differance_list)))
 
     return data_in[0]
-
-
-if __name__ == "__main__":
-    from testing_utils import _test_func
-
-    examples = [  # [Input, Output]
-        # positive control (works, does changes)
-        [[
-            Quantity("-44 degree_Fahrenheit"),
-            Quantity("-41.6 degree_Celsius"),
-            Quantity("-41.6 degree_Celsius"),
-            Quantity("-42 degree_Celsius"),
-            Quantity("-42 degree_Celsius"),
-            Quantity("-44 degree_Fahrenheit"),
-            Quantity("-44 degree_Fahrenheit")
-        ], Quantity("-44 degF")],
-        [[
-            Quantity("68 degree_Fahrenheit"),
-            Quantity("68.0 degree_Fahrenheit"),
-            Quantity("20.0 degree_Celsius"),
-            Quantity("293.15 kelvin * speed_of_light ** 2"),
-            Quantity("68 degree_Fahrenheit"),
-            Quantity("68 degree_Fahrenheit")
-        ], Quantity("68 degF")],
-        [[
-            [
-                [Quantity("18 millimeter_Hg"), Quantity("68 degree_Fahrenheit")],
-                [Quantity("20 millimeter_Hg"), Quantity("77.0 degree_Fahrenheit")]
-            ],
-            Quantity("20.8 millimeter_Hg"),
-            [Quantity("20.8 millimeter_Hg"), Quantity("25 degree_Celsius")],
-            Quantity("2.0 dimensionless"),
-            Quantity("16 millimeter_Hg"),
-            Quantity("16 millimeter_Hg")
-        ],
-            [
-                [Quantity("18 millimeter_Hg"), Quantity("68 degree_Fahrenheit")],
-                [Quantity("20 millimeter_Hg"), Quantity("77.0 degree_Fahrenheit")]
-            ]],
-        [[
-            [Quantity("68 degree_Fahrenheit"), Quantity("760.0 millimeter_Hg")],
-            Quantity("68.0 degree_Fahrenheit"),
-            Quantity("20.0 degree_Celsius"),
-            Quantity("293.15 kelvin * speed_of_light ** 2"),
-            Quantity("68 degree_Fahrenheit"),
-            Quantity("68 degree_Fahrenheit")
-        ], [Quantity("68 degree_Fahrenheit"), Quantity("760.0 millimeter_Hg")]],
-
-        # negative control (fails/ does no changes)
-
-    ]
-
-    _test_func(reduce_quantity_list, examples)

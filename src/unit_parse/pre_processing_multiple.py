@@ -18,7 +18,7 @@ def multiple_quantities_main(text_in: str) -> list[list[str]]:
     -------
 
     """
-    text_list = multiple_quantities(text_in, sep=config["pre_proc_split"])
+    text_list = multiple_quantities(text_in, sep=config.pre_proc_split)
     out = []
     for text in text_list:
         out.append(condition_finder(text))

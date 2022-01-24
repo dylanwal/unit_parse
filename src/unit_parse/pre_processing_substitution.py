@@ -49,7 +49,8 @@ def substitution(text_in: str) -> str:
     test: str
 
     """
-    text_in = sub_general(text_in, patterns=config["pre_proc_sub"])
+    text_in = sub_general(text_in, patterns=config.pre_proc_sub)
+    text_in = remove_words(text_in, words=config.english_dict)
     text_in = sub_power(text_in)
     text_in = sub_sci_notation(text_in)
     text_in = reduce_ranges(text_in)
@@ -210,3 +211,17 @@ def reduce_ranges(text_in: str) -> str:
         return text_in.replace(data_found[0], reduced_range)
     else:
         return text_in.strip()
+
+
+@log_debug
+def remove_words(text_in: str, words: set[str]) -> str:
+    """ Removes words found in the english dictionary."""
+    split_text = text_in.split()
+
+    result = []
+    for text in split_text:
+        text_check = text.lower().replace(":", "").replace(",", "").replace(".", "")
+        if text_check not in words:
+            result.append(text)
+
+    return " ".join(result)

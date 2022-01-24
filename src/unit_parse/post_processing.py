@@ -1,6 +1,6 @@
 from typing import List
 
-from . import Quantity
+from .config import Quantity
 from .utils import quantity_approx_equal, get_list_depth
 from .logger import log_info
 
