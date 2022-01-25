@@ -8,6 +8,7 @@ from unit_parse.logger import log_debug, log_info
 
 
 class QuantClass(Enum):
+    """ Classifications for data. """
     NUMBER = 0
     SINGLE = 1
     SERIES = 2
@@ -126,10 +127,12 @@ def _select_from_data_dict(data_dict: dict, order: tuple[QuantClass]) -> Union[l
                 # get one with largest series
                 lens = [data_dict[k]["len"] for k in keys_of_hits]
                 key_largest = keys_of_hits[lens.index(max(lens))]
+                key_largest = double_check_output(data_dict, key_largest)
                 return data_dict[key_largest]["quantity"]
 
             elif order_ == QuantClass.CONDITIONS:
-                return data_dict[keys_of_hits[0]]["quantity"]
+                key = double_check_output(data_dict, keys_of_hits[0])
+                return data_dict[key]["quantity"]
 
             elif order_ == QuantClass.SINGLE or order_ == QuantClass.NUMBER:
                 # get one with most counts
@@ -169,3 +172,24 @@ def _get_middle_quantity(data_in: list[Quantity]) -> Quantity:
         data_in.pop(differance_list.index(max(differance_list)))
 
     return data_in[0]
+
+
+def double_check_output(data_dict: dict, most_promising_key):
+    """ Check conditions, series and condition series against single (if there is a popular single). If unit dimensions
+    don't match, take single. """
+    keys_of_hits = [k for k, v in data_dict.items() if QuantClass.SINGLE == v["type"]]
+    counts = [data_dict[k]["count"] for k in keys_of_hits]
+    if max(counts) > 1:
+        if data_dict[most_promising_key]["type"] == QuantClass.SERIES_CONDITIONS or \
+                data_dict[most_promising_key]["type"] == QuantClass.CONDITIONS:
+            quantity = data_dict[most_promising_key]["quantity"][0][0]
+        else:  # data_dict[most_promising_key]["type"] == QuantClass.SERIES:
+            quantity = data_dict[most_promising_key]["quantity"][0]
+
+        single_quantity_key = keys_of_hits[counts.index(max(counts))]
+        single_quantity = data_dict[single_quantity_key]["quantity"]
+
+        if not isinstance(single_quantity_key, Quantity) or not isinstance(quantity, Quantity):
+            return single_quantity_key
+
+    return most_promising_key

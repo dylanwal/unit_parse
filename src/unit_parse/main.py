@@ -51,7 +51,7 @@ def parser(text_in: str, remove_string: list[str] = None) -> Union[Quantity, lis
     out = remove_empty_cells(out)
 
     # return unit instead of list if just one
-    if len(out) == 1:
+    if isinstance(out, list) and len(out) == 1:
         if not isinstance(out[0], list):
             out = out[0]
         elif isinstance(out[0], list) and len(out[0]) == 1:

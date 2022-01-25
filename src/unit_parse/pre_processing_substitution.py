@@ -50,6 +50,7 @@ def substitution(text_in: str) -> str:
 
     """
     text_in = sub_general(text_in, patterns=config.pre_proc_sub)
+    text_in = capitalization_check(text_in)
     text_in = remove_words(text_in, words=config.english_dict)
     text_in = sub_power(text_in)
     text_in = sub_sci_notation(text_in)
@@ -229,3 +230,23 @@ def remove_words(text_in: str, words: set[str]) -> str:
             result.append(text)
 
     return " ".join(result)
+
+
+@log_debug
+def capitalization_check(text_in: str) -> str:
+    """
+
+    If all letters are capitalized, switch to lower case as Pint is case sensitive.
+
+    Parameters
+    ----------
+    text_in
+
+    Returns
+    -------
+
+    """
+    if text_in.isupper() and sum(char.isalpha() for char in text_in) > 2:  # 2 is used to avoid single capital units
+        return text_in.lower()
+
+    return text_in

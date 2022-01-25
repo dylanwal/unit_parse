@@ -91,10 +91,10 @@ class Config:
             ["(?<=[^a-zA-Z])at([^a-zA-Z])", " @ "],  # replace at with @
             ["−", "-"],  # unify dash (long, short) symbols
             ["·", "*"],  # unify multiplication symbols
-            ["mm Hg", "mmHg"],  # pint gets confused
-            ["KG", "kg"],  # pint gets confused
             ["° F", " °F"],  # pint gets confused (degree farad)
             ["° C", " °C"],  # pint gets confused
+            ["°F", "degF"],  # eliminates issue with capitalization step
+            ["°C", "degC"], # eliminates issue with capitalization step
             ["(?<=[0-9]{1})[ ]{0,1}X[ ]{0,1}(?=[0-9]{1})", "*"],  # unify multiplication symbols
             ["(?<=[0-9]{1})[ ]{0,1}x[ ]{0,1}(?=[0-9]{1})", "*"],  # unify multiplication symbols
             ["\[", "("],  # make all brackets parenthesis
@@ -102,7 +102,14 @@ class Config:
             ["^.*={1}", ""],  # delete everything in front of equal
             ["^.*:{1}", ""],  # delete everything in front of collen
             ["( to )", "-"],   # unify how range are represented
-            ["(?<=[a-zA-Z])-(?=[a-zA-Z])", " "]  # turn dashes between text to spaces so dictionary can remove if needed
+            ["(?<=[a-zA-Z])-(?=[a-zA-Z])", " "],  # turn dashes between text into spaces so dictionary can remove
+            ["mm Hg", "mmHg"],  # pint gets confused
+            ["KG", "kg"],  # pint gets confused
+            ["cu ft", "ft**3"],  # pint gets confused
+            ["cu in", "m**3"],  # pint gets confused
+            ["cu m", "m**3"],  # pint gets confused
+            ["cu cm", "m**3"],  # pint gets confused
+            ["cu mm", "m**3"],  # pint gets confused
         ]
 
         self.pre_proc_split = [";"]

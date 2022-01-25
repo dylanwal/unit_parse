@@ -15,6 +15,7 @@ examples = [
     ["1 K", Quantity("1 kelvin")],
     ['40 °F', Quantity("40 degF")],
     ['-40 °F', Quantity('-40 degF')],
+    ["170°C", Quantity('170 degC')],
     ['40°F', Quantity('40 degF')],
     ['20.80 mmHg', Quantity('20.80 mmHg')],
     ['20.80 mm Hg', Quantity('20.80 mmHg')],  # correcting a unit that pint gets wrong
@@ -49,6 +50,7 @@ examples = [
     ['−66.11·10-62 cm3/mol', Quantity('-66.11*10**-62 cm**3/mol')],
     ['−66.11·10+62 cm3/mol', Quantity('-66.11*10**62 cm**3/mol')],
     ['−66.11·1062 cm3/mol', Quantity('-66.11*10**62 cm**3/mol')],
+    ["345.234 KCAL/MOLE", Quantity("345.234 kcal/mole")],
 
     # parenthesis (brackets turned to parenthesis)
     ["(4.0 °C)", Quantity("4 degC")],

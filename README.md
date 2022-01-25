@@ -50,17 +50,17 @@ Pass string you want to parse to `parser()`.
 from unit_parse import parser
 
 result = parser("1.23 g/cm3 (at 25 °C)")
-print(result) # [[Quantity("1.23 g/(cm**3)"), Quantity(25 deg)]
+print(result) # [[<Quantity(1.23, 'gram / centimeter ** 3')>, <Quantity(25, 'degree_Celsius')>]]
 ```
 'Quantity' are [pint quantities](https://pint.readthedocs.io/en/stable/defining-quantities.html). 
 
 ### Output structure
-* **parse unsuccessful**: None
+* **Parse unsuccessful**: None
 * **Single value:** quantity
     * `5 g/mol`
 * **Single value with condition:** [[quantity, condition]]  
     * `[['25 degC', '1 bar']]`
-    * boil temperature is 25 at 1 bar of pressure
+    * boil temperature is 25 °C at 1 bar of pressure
 * **Multiple values:**  [quantity, quantity, ...] 
     * `[25 degC, 50 degC]`
 * **Multiple values with conditions:** [[quantity, condition], [quantity, condition], ...]
