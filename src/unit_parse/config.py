@@ -85,6 +85,8 @@ class Config:
     """
 
     def __init__(self):
+        self.remove_text = []
+
         self.pre_proc_sub = [
             # [pattern, substitution value]
             ["^[a-zA-Z;,.: /]*", ""],  # remove text at front of strings
@@ -94,7 +96,7 @@ class Config:
             ["° F", " °F"],  # pint gets confused (degree farad)
             ["° C", " °C"],  # pint gets confused
             ["°F", "degF"],  # eliminates issue with capitalization step
-            ["°C", "degC"], # eliminates issue with capitalization step
+            ["°C", "degC"],  # eliminates issue with capitalization step
             ["(?<=[0-9]{1})[ ]{0,1}X[ ]{0,1}(?=[0-9]{1})", "*"],  # unify multiplication symbols
             ["(?<=[0-9]{1})[ ]{0,1}x[ ]{0,1}(?=[0-9]{1})", "*"],  # unify multiplication symbols
             ["\[", "("],  # make all brackets parenthesis
@@ -105,23 +107,21 @@ class Config:
             ["(?<=[a-zA-Z])-(?=[a-zA-Z])", " "],  # turn dashes between text into spaces so dictionary can remove
             ["mm Hg", "mmHg"],  # pint gets confused
             ["KG", "kg"],  # pint gets confused
+            ["LB", "lb"],  # pint gets confused
+            ["kpa", "kPa"],  # pint gets confused
             ["cu ft", "ft**3"],  # pint gets confused
-            ["cu in", "m**3"],  # pint gets confused
+            ["cu in", "in**3"],  # pint gets confused
             ["cu m", "m**3"],  # pint gets confused
-            ["cu cm", "m**3"],  # pint gets confused
-            ["cu mm", "m**3"],  # pint gets confused
+            ["cu cm", "cm**3"],  # pint gets confused
+            ["cu mm", "mm**3"],  # pint gets confused
         ]
 
         self.pre_proc_split = [";"]
 
         self.last_minute_sub = [
             # [pattern, substitution value]
-            ["LB", "lb"],
-            ["mm Hg", "mmHg"],
-            ["kpa", "kPa"],
-            ["-{1}[^0-9]*$", ""],
-            ["° F", "°F"],
-            ["° C", "°C"],
+            ["-{1}[^0-9]*$", ""],  # remove trailing dash
+            ["(?<=[a-zA-Z0-9]) {1,2}[0-9()]{2,5}", ""]  # remove trailing number  ex. 90 g/mol 1999 ->  90 g/mol
         ]
 
         self.english_dict = english_dict

@@ -134,7 +134,7 @@ from unit_parse import parser, logger
 logger.setLevel(logging.DEBUG)
 
 result = parser("37.34 kJ/mole (at 25 °C)")
-print(result)  # [<Quantity(37.34, 'kilojoule / mole')>, <Quantity(25, 'degree_Celsius')>] or [37.34 kJ/mole, 25 °C]
+print(result) 
 ```
 
 Output:
@@ -173,6 +173,104 @@ Yep, there's alot of them!
     # stuff
 ```
 
+
+---
+## Configuration
+
+The parser has a few configurations exposed to make it easy to modify how the works.
+
+### Remove words
+
+Text you want removed prior to parsing. 
+
+Default is None. (Note: the parser naturally takes care of alot of 'bad' text)
+
+```python
+import unit_parse
+
+remove_words = ["approx.", "roughly", "close to"]
+unit_parse.config.remove_text = remove_words
+
+result = unit_parse.parser("approx. 100 grams")
+print(result)  # Quantity("100 gram")
+```
+
+### Pre-Processing Substitutions
+
+Text you want to replace with another. 
+
+Default there is a big list. Regex or text is accepted.
+
+**Defaults:**
+```python
+pre_proc_sub = [
+  # [pattern, substitution value]
+  ["^[a-zA-Z;,.: /]*", ""],  # remove text at front of strings
+  ["(?<=[^a-zA-Z])at([^a-zA-Z])", " @ "],  # replace at with @
+  ["−", "-"],  # unify dash (long, short) symbols
+  ["·", "*"],  # unify multiplication symbols
+  ["° F", " °F"],  # pint gets confused (degree farad)
+  ["° C", " °C"],  # pint gets confused
+  ["°F", "degF"],  # eliminates issue with capitalization step
+  ["°C", "degC"],  # eliminates issue with capitalization step
+  ["(?<=[0-9]{1})[ ]{0,1}X[ ]{0,1}(?=[0-9]{1})", "*"],  # unify multiplication symbols
+  ["(?<=[0-9]{1})[ ]{0,1}x[ ]{0,1}(?=[0-9]{1})", "*"],  # unify multiplication symbols
+  ["\[", "("],  # make all brackets parenthesis
+  ["\]", ")"],  # make all brackets parenthesis
+  ["^.*={1}", ""],  # delete everything in front of equal
+  ["^.*:{1}", ""],  # delete everything in front of collen
+  ["( to )", "-"],   # unify how range are represented
+  ["(?<=[a-zA-Z])-(?=[a-zA-Z])", " "],  # turn dashes between text into spaces so dictionary can remove
+  ["mm Hg", "mmHg"],  # pint gets confused
+  ["KG", "kg"],  # pint gets confused
+  ["LB", "lb"],  # pint gets confused
+  ["kpa", "kPa"],  # pint gets confused
+  ["cu ft", "ft**3"],  # pint gets confused
+  ["cu in", "in**3"],  # pint gets confused
+  ["cu m", "m**3"],  # pint gets confused
+  ["cu cm", "cm**3"],  # pint gets confused
+  ["cu mm", "mm**3"],  # pint gets confused
+]
+```
+
+
+```python
+import unit_parse
+
+more_pre_processing = [["MOL", "mol"]] # [bad text/regex, new text]
+unit_parse.config.pre_proc_sub += more_pre_processing  # Here we are adding to the existing list
+
+result = unit_parse.parser("100 MOL")  # pint is case-sensitive, so this will result in an invalid unit
+print(result)  # Quantity("100 mole")
+```
+
+### Last Minute Substitutions
+
+Text you want to replace with another, but happens at the very last stage before trying to convert to a unit. You 
+should try to use pre-substitutions first, but there can be some situations where you want to do substitutions at a 
+semi-parsed quantity.  
+
+Default there is a big list. Regex or text is accepted.
+
+**Defaults:**
+```python
+last_minute_sub = [
+  # [pattern, substitution value]
+  ["-{1}[^0-9]*$", ""],  # remove trailing dash
+  ["(?<=[a-zA-Z0-9]) {1,2}[0-9()]{2,5}", ""]  # remove trailing number  ex. 90 g/mol 1999 ->  90 g/mol
+]
+```
+
+
+```python
+import unit_parse
+        
+more_last_minute_sub = [["MOL", "mol"]] # [bad text/regex, new text]
+unit_parse.config.last_minute_sub += more_last_minute_sub # Here we are adding to the existing list
+
+result = unit_parse.parser("100 MOL")  # pint is case-sensitive, so this will result in an invalid unit
+print(result)  # Quantity("100 mole")
+```
 
 
 ---

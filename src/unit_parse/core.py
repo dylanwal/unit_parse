@@ -31,6 +31,8 @@ def text_list_to_quantity(text_list: Union[list[list[str]], list[str]]) -> list[
     Quantity: list[list[Quantity]], list[Quantity]
 
     """
+    text_list = last_minute_sub(text_list)
+
     out = []
     for text in text_list:
         if len(text) == 1:
@@ -41,6 +43,18 @@ def text_list_to_quantity(text_list: Union[list[list[str]], list[str]]) -> list[
         if result is not None:
             out.append(result)
     return out
+
+
+@log_debug
+def last_minute_sub(text_list: Union[list[list[str]], list[str]]) -> Union[list[list[str]], list[str]]:
+    for i, obj in enumerate(text_list):
+        if isinstance(obj, list):
+            for ii, text in enumerate(obj):
+                text_list[i][ii] = sub_general(text, config.last_minute_sub)
+        else:
+            text_list[i] = sub_general(obj, config.last_minute_sub)
+
+    return text_list
 
 
 @log_debug
@@ -145,7 +159,6 @@ def get_quantity(text_in: str) -> Union[Quantity, None]:
         If unsuccessful return None
 
     """
-    text_in = sub_general(text_in, config.last_minute_sub)
     if not contains_number(text_in):
         return None
 

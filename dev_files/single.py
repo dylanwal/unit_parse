@@ -23,8 +23,7 @@ logger.setLevel(logging.DEBUG)
 # ]
 # testing_func(remove_words, test_remove_words, {"words": config.english_dict})
 
-
-result = parser("20.8 mm Hg @ 25 °C' -> '20.8 millimeter_Hg")
+result = parser("1.0722 at 68 °F (EPA, 1998)")
 
 print(result)
 

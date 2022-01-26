@@ -23,6 +23,10 @@ def remove_strings(text_in: str, remove_string: List[str]) -> str:
     text: str
 
     """
+    # guard statement
+    if remove_string is None or remove_string == []:
+        return text_in
+
     for text in remove_string:
         text_in = text_in.replace(text, "")
 
@@ -83,6 +87,10 @@ def sub_general(text_in: str, patterns: Optional[List[List[str]]]) -> str:
     text: str
 
     """
+    # guard statement
+    if patterns is None or patterns == []:
+        return text_in
+
     if isinstance(patterns, list):
         if isinstance(patterns[0], list):
             for pattern in patterns:

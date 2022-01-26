@@ -1,9 +1,10 @@
 from typing import Union, Any
 from enum import Enum
 import math
+import statistics
 
-from unit_parse.config import Quantity
-from unit_parse.utils import quantity_approx_equal
+from unit_parse.config import Quantity, Unit
+from unit_parse.utils import quantity_approx_equal, quantity_difference
 from unit_parse.logger import log_debug, log_info
 
 
@@ -18,39 +19,64 @@ class QuantClass(Enum):
 
 @log_info
 def reduce_quantities(data_in: Any,
-                      order: tuple[QuantClass] = (QuantClass.SERIES_CONDITIONS,
-                                                  QuantClass.CONDITIONS,
-                                                  QuantClass.SERIES,
-                                                  QuantClass.SINGLE,
-                                                  QuantClass.NUMBER)) -> Quantity:
-    """
+                      order: tuple[QuantClass] = (QuantClass.SERIES_CONDITIONS, QuantClass.CONDITIONS,
+                                                  QuantClass.SERIES, QuantClass.SINGLE, QuantClass.NUMBER),
+                      prefer_unit: Unit = None,
+                      ) -> Quantity:
+    """ reduce quantities
 
-    Ordering of returned quantity is set by QuantClass
-    default ordering:
-    series condition (largest series) > conditions > series (largest series) >
-    single (highest repeated) > single (middle value with most common unit) > number (highest
-    repeated) > single (middle value with most common unit)
+    First cleaning is done by units, then by data type.
+
+    Unit ordering:
+        1) preferred unit
+        2) most common unit, Unless it is dimensionless than -->
+            2a) take the most common non-dimensionless
+
+    data type ordering:
+        1) series condition (the largest series)
+        2) conditions
+        3) series (the largest series)
+        4) single (the highest repeated)
+        5) single (middle value)
+        6) number (the highest repeated)
+        7) number (middle value)
 
     Parameters
     ----------
     data_in: Any
-
+        data to be cleaned
     order: tuple[int]
         See QuantClass for integer values
+    prefer_unit: Unit
+        This unit will be preferred when down selecting
 
     Returns
     -------
     output: Any
 
     """
-    if isinstance(data_in, list) and data_in != []:
-        if len(data_in) <= 1:
-            return data_in[0]
+    # guard statements
+    if not isinstance(data_in, list) or data_in == []:
+        return data_in
+    if len(data_in) <= 1:
+        return data_in[0]
 
-        data_dict = quantity_list_to_dict(data_in)
-        return _select_from_data_dict(data_dict, order=order)
+    # generate data_dictionary
+    data_dict = quantity_list_to_dict(data_in)
 
-    return data_in
+    # if data collapses to a single data_dict, then return early
+    if len(data_dict.keys()) == 1:
+        return data_dict.popitem()[1]["quantity"]
+
+    # remove bad dimensionality
+    data_dict = remove_bad_dim(data_dict, prefer_unit)
+
+    # if data collapses to a single data_dict, then return early
+    if len(data_dict.keys()) == 1:
+        return data_dict.popitem()[1]["quantity"]
+
+    # select base on ordering
+    return _select_from_data_dict(data_dict, order=order)
 
 
 @log_debug
@@ -73,98 +99,117 @@ def quantity_list_to_dict(data_in: list[Any]) -> dict:
     for i, data in enumerate(data_in):
         if isinstance(data, Quantity):
             # if data is similar to existing, increase count
-            if any([quantity_approx_equal(data, v["quantity"]) for v in data_dict.values()]):
+            if any([quantity_approx_equal(data, v["quantity"])
+                    for v in data_dict.values() if v["type"] == QuantClass.SINGLE]):
                 for k, v in data_dict.items():
                     if quantity_approx_equal(data, v["quantity"]):
                         data_dict[k]["count"] += 1
             else:
                 # new data
-                data_dict[i] = {"quantity": data, "count": 1, "type": QuantClass.SINGLE}
+                data_dict[i] = {"quantity": data, "count": 1, "unit": data.units, "type": QuantClass.SINGLE}
 
         elif isinstance(data, (int, float)):
             # if data is similar to existing, increase count
-            if any([math.isclose(data, v["quantity"], rel_tol=0.05) for v in data_dict.values()]):
+            if any([math.isclose(data, v["quantity"], rel_tol=0.05)
+                    for v in data_dict.values() if v["type"] == QuantClass.NUMBER]):
+
                 for k, v in data_dict.items():
                     if math.isclose(data, v["quantity"], rel_tol=0.05):
                         data_dict[k]["count"] += 1
             else:
                 # new data
-                data_dict[i] = {"quantity": data, "count": 1, "type": QuantClass.NUMBER}
+                data_dict[i] = {"quantity": data, "unit": Unit(""), "count": 1, "type": QuantClass.NUMBER}
 
         elif isinstance(data, list):
             if isinstance(data[0], list):
                 if len(data) == 1:
-                    data_dict[i] = {"quantity": data, "count": 1, "type": QuantClass.CONDITIONS}
+                    data_dict[i] = {"quantity": data, "unit":  _get_dim(data[0][0]), "count": 1,
+                                    "type": QuantClass.CONDITIONS}
                 else:
                     data_dict[i] = {
-                        "quantity": data, "count": 1, "len": len(data[0]),
+                        "quantity": data, "count": 1, "len": len(data[0]), "unit": _get_dim(data[0][0]),
                         "type": QuantClass.SERIES_CONDITIONS
                     }
             else:
-                data_dict[i] = {"quantity": data, "count": 1, "len": len(data), "type": QuantClass.SERIES}
+                data_dict[i] = {"quantity": data, "count": 1, "len": len(data), "unit": _get_dim(data[0]),
+                                "type": QuantClass.SERIES}
 
     return data_dict
 
 
-@log_debug
-def _select_from_data_dict(data_dict: dict, order: tuple[QuantClass]) -> Union[list[Quantity], Quantity]:
-    """
-    Select the list or Quantity that is most likely to be right.
-    Rules: Series_conditions > conditions > single (mean of single)
-    """
-    if len(data_dict.keys()) == 1:
-        return data_dict[0]["quantity"]
+def _get_dim(obj: Union[int, float, Quantity]):
+    if isinstance(obj, Quantity):
+        return obj.units
+    return Unit("")
 
+
+@log_debug
+def _select_from_data_dict(data_dict: dict, order: tuple[QuantClass]) \
+        -> Union[list[Quantity], Quantity]:
+    """
+    Select data based on order
+    """
     for order_ in order:
         # check if QuantClass in dict in order given by 'order' parameter
         keys_of_hits = [k for k, v in data_dict.items() if order_ == v["type"]]
-        if len(keys_of_hits) == 0:
+
+        if len(keys_of_hits) == 0:  # no QuantClass in data
             continue
-        elif len(keys_of_hits) == 1:
+
+        elif len(keys_of_hits) == 1:  # one QuantClass found
+            if order_ == QuantClass.SERIES_CONDITIONS or order_ == QuantClass.SERIES or \
+                    order_ == QuantClass.CONDITIONS:
+                return data_dict[keys_of_hits[0]]["quantity"]
+                # return double_check_output(data_dict, keys_of_hits)
+
             return data_dict[keys_of_hits[0]]["quantity"]
-        else:
+
+        else:  # two or more of a similar QuantClass found
             if order_ == QuantClass.SERIES_CONDITIONS or order_ == QuantClass.SERIES:
-                # get one with largest series
-                lens = [data_dict[k]["len"] for k in keys_of_hits]
+                lens = [data_dict[k]["len"] for k in keys_of_hits]  # get largest series
                 key_largest = keys_of_hits[lens.index(max(lens))]
-                key_largest = double_check_output(data_dict, key_largest)
                 return data_dict[key_largest]["quantity"]
+                # return double_check_output(data_dict, key_largest)
 
             elif order_ == QuantClass.CONDITIONS:
-                key = double_check_output(data_dict, keys_of_hits[0])
-                return data_dict[key]["quantity"]
+                return double_check_output(data_dict, keys_of_hits)
 
-            elif order_ == QuantClass.SINGLE or order_ == QuantClass.NUMBER:
-                # get one with most counts
-                counts = [data_dict[k]["count"] for k in keys_of_hits]
-                if max(counts) > 1:
-                    key_most_counts = keys_of_hits[counts.index(max(counts))]
-                    return data_dict[key_most_counts]["quantity"]
+            elif order_ == QuantClass.SINGLE:
+                return _get_best_single(data_dict)
 
-                # get one in the middle
-                list_of_quantities = [data_dict[k]["quantity"] for k in keys_of_hits]
-                return _get_middle_quantity(_filter_out_by_dimensionality(list_of_quantities))
+            elif order_ == QuantClass.NUMBER:
+                return _get_best_number(data_dict)
+
     else:
         raise ValueError(f"Order parameter issue.")
 
 
+def _get_best_single(data_dict: dict):
+    single = [[v["count"], v["quantity"]] for v in data_dict.values() if QuantClass.SINGLE == v["type"]]
+
+    # get one with most counts
+    max_counts = max(single, key=lambda x: x[0])
+    if max_counts[0] > 1:
+        return max_counts[1]
+
+    # get one in the middle
+    return get_middle_quantity([i[1] for i in max_counts])
+
+
+def _get_best_number(data_dict: dict):
+    single = [[v["count"], v["quantity"]] for v in data_dict.values() if QuantClass.NUMBER == v["type"]]
+
+    # get one with most counts
+    max_counts = max(single, key=lambda x: x[0])
+    if max(max_counts[0]) > 1:
+        return max_counts[1]
+
+    # get one in the middle
+    return statistics.median([i[1] for i in max_counts])
+
+
 @log_debug
-def _filter_out_by_dimensionality(data_in: list[Quantity]) -> list[Quantity]:
-    """ Find most common dimension and filter out any bad ones."""
-
-    unit_dimensionality_count = {}
-    for data in data_in:
-        if data.dimensionality not in unit_dimensionality_count:
-            unit_dimensionality_count[data.dimensionality] = 1
-        else:
-            unit_dimensionality_count[data.dimensionality] += 1
-
-    most_common_unit = max(unit_dimensionality_count, key=unit_dimensionality_count.get)
-    return [data for data in data_in if most_common_unit == data.dimensionality]
-
-
-@log_debug
-def _get_middle_quantity(data_in: list[Quantity]) -> Quantity:
+def get_middle_quantity(data_in: list[Quantity]) -> Quantity:
     """ Remove data furthest from average till 1 point left."""
     for i in range(len(data_in) - 1):
         data_average = sum([data.to_base_units() for data in data_in]) / len(data_in)
@@ -174,22 +219,90 @@ def _get_middle_quantity(data_in: list[Quantity]) -> Quantity:
     return data_in[0]
 
 
-def double_check_output(data_dict: dict, most_promising_key):
-    """ Check conditions, series and condition series against single (if there is a popular single). If unit dimensions
-    don't match, take single. """
+def double_check_output(data_dict: dict, most_promising_key: Union[list[str], str]):
+    """ double check output
+
+    Check conditions, series and condition series against single (if there is a popular single).
+    If unit dimensions don't match, take single.
+
+    """
+    if not isinstance(most_promising_key, list):
+        most_promising_key = [most_promising_key]
+
+    # Check if there is some Single data to check against
     keys_of_hits = [k for k, v in data_dict.items() if QuantClass.SINGLE == v["type"]]
-    counts = [data_dict[k]["count"] for k in keys_of_hits]
-    if max(counts) > 1:
-        if data_dict[most_promising_key]["type"] == QuantClass.SERIES_CONDITIONS or \
-                data_dict[most_promising_key]["type"] == QuantClass.CONDITIONS:
-            quantity = data_dict[most_promising_key]["quantity"][0][0]
-        else:  # data_dict[most_promising_key]["type"] == QuantClass.SERIES:
-            quantity = data_dict[most_promising_key]["quantity"][0]
+    counts = sum([data_dict[k]["count"] for k in keys_of_hits])
+    if counts <= 2:  # if not more than two others, nothing to double-check
+        return data_dict[most_promising_key[0]]["quantity"]
 
-        single_quantity_key = keys_of_hits[counts.index(max(counts))]
-        single_quantity = data_dict[single_quantity_key]["quantity"]
+    # get most common single unit
+    single_quantity = _get_best_single(data_dict)
 
-        if not isinstance(single_quantity_key, Quantity) or not isinstance(quantity, Quantity):
-            return single_quantity_key
+    best_results = [1, None]
+    for key in most_promising_key:
+        smallest_diff = 1
+        if data_dict[key]["type"] == QuantClass.SERIES_CONDITIONS:
+            # look through SERIES_CONDITIONS for value closest to single_quantity
+            for value in data_dict[key]["quantity"]:
+                diff = quantity_difference(value[0], single_quantity)
+                smallest_diff = diff if diff > smallest_diff else smallest_diff
 
-    return most_promising_key
+        elif data_dict[key]["type"] == QuantClass.CONDITIONS:
+            smallest_diff = quantity_difference(data_dict[key]["quantity"][0][0], single_quantity)
+
+        else:  # QuantClass.SERIES:
+            # look through SERIES for value closest to single_quantity
+            for value in data_dict[key]["quantity"]:
+                diff = quantity_difference(value, single_quantity)
+                smallest_diff = diff if diff > smallest_diff else smallest_diff
+
+        if smallest_diff < best_results[0]:
+            best_results = [smallest_diff, data_dict[key]["quantity"]]
+
+    return best_results[1]
+
+
+@log_debug
+def remove_bad_dim(data_dict: dict, prefer_unit: Unit = None) -> dict:
+    """
+
+    Remove data that doesn't match the most common dimension
+
+    Parameters
+    ----------
+    data_dict: dict
+
+    prefer_unit: Unit
+        Unit that will be preferred over all others. (If not found, choose most common).
+
+    Returns
+    -------
+
+    """
+    dims = {}
+    for v in data_dict.values():
+        if v["unit"] is None:
+            continue
+
+        dim = v["unit"].dimensionality
+        if dim in dims:  # if in dict, increase count
+            dims[dim] += v["count"]
+        else:
+            dims[dim] = v["count"]
+
+    most_common_dim = max(dims, key=dims.get)
+
+    # prefer unit
+    skip_flag = True
+    if prefer_unit is not None:
+        if most_common_dim != prefer_unit.dimensionality:
+            most_common_dim = prefer_unit.dimensionality
+            skip_flag = False
+
+    # prefer non-dimensionless values first
+    if skip_flag and most_common_dim == Unit("") and len(dims) > 1:
+        dims.pop(most_common_dim)
+        most_common_dim = max(dims, key=dims.get)
+
+    # remove data that doesn't match most common dim
+    return {k: v for k, v in data_dict.items() if v["unit"].dimensionality == most_common_dim}

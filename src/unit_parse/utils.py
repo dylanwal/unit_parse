@@ -16,6 +16,14 @@ def quantity_approx_equal(quantity1: Quantity, quantity2: Quantity, cutoff: Opti
     return False
 
 
+def quantity_difference(quantity1: Quantity, quantity2: Quantity) -> float:
+    """ Returns T/F for any two quantities"""
+    if not isinstance(quantity1, Quantity) or not isinstance(quantity2, Quantity):
+        return 1
+
+    return abs((quantity1 - quantity2) / quantity2)
+
+
 def flatten_list(list_in: List[Any]) -> List[Any]:
     """
     Turns nested lists into a single level list.

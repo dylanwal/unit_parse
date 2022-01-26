@@ -61,6 +61,7 @@ examples = [
     ["(4.0 (°C)", Quantity("4 degC")],
     ["()4.0 (°C)", Quantity("4 degC")],
     ['4.0 °C [39.2 g/[mol * s]]', [[Quantity("4 degC"), Quantity("39.2 g/(mol * s)")]]],
+    ["1.0722 at 68 °F (EPA, 1998)", [[1.0722, Quantity("68 degF")]]],
 
     # conditions
     ["37.34 kJ/mole (at 25 °C)", [[Quantity("37.34 kJ/mole"), Quantity("25 degC")]]],
@@ -78,6 +79,8 @@ examples = [
      [[Quantity('18 mmHg'), Quantity('68 degF')], [Quantity('20 mmHg'), Quantity('77 degF')]]],
     ['18 mm Hg at 68 °F ; 20 mm Hg at 77 °F',
      [[Quantity('18 mmHg'), Quantity('68 degF')], [Quantity('20 mmHg'), Quantity('77 degF')]]],
+    ["Low threshold= 13.1150 mg/cu m; High threshold= 26840 mg/cu m; Irritating concn= 22875 mg/cu m.",
+     Quantity('22875 mg/m**3')],
 
     # ranges
     ['115.2-115.3 °C', Quantity('115.2 degC')],
@@ -114,13 +117,6 @@ examples = [
 
 ]
 
-delete_text = [
-    "approx.",
-    "approximate",
-    "approx",
-    "closed cup",
-    "(NTP, 1992)",
-    ]
 
 
 def pre_process_values():
@@ -129,9 +125,9 @@ def pre_process_values():
         print(f"{example[0]} --> {result}")
 
 
-def testing():
+def main():
     testing_func(parser, examples)
 
 
 if __name__ == '__main__':
-    testing()
+    main()
