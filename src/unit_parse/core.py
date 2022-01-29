@@ -8,10 +8,10 @@ most mess.
 from typing import List, Union
 import re
 
-from .config import Unit, Quantity, config
-from .pre_processing_substitution import sub_general
-from .utils import flatten_list, contains_number, sig_figs, remove_empty_str, split_list
-from .logger import log_debug, log_info, logger
+from unit_parse.config import Unit, Quantity, config
+from unit_parse.pre_processing_substitution import sub_general
+from unit_parse.utils import flatten_list, contains_number, sig_figs, remove_empty_str, split_list
+from unit_parse.logger import log_debug, log_info, logger
 
 
 @log_info
@@ -341,7 +341,7 @@ def split_on_multiplication_symbol(text_in: Union[str, list[str], list[Union[str
                     except Exception:
                         pass
                     if bool(re.match("([^*]+)[ ]?[*][ ]?([^*-0-9].*)", split)):
-                        new_splits[ii] = split_on_multiplication_symbol(split)  # recursive
+                        new_splits[ii] = split_on_multiplication_symbol(split)  # pragma: no cover  recursive
 
                 text_in[i] = new_splits
                 continue

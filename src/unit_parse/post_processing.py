@@ -1,8 +1,8 @@
 from typing import List
 
-from .config import Quantity
-from .utils import quantity_approx_equal, get_list_depth
-from .logger import log_info
+from unit_parse.config import Quantity
+from unit_parse.utils import quantity_approx_equal, get_list_depth
+from unit_parse.logger import log_info
 
 
 @log_info

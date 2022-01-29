@@ -4,5 +4,5 @@ from unit_parse.main import parser
 from unit_parse.reduce_quantities import reduce_quantities
 
 __all__ = [
-     "Unit", "U", "Q", "Quantity", "parser", "logger", "reduce_quantities"
+     "Unit", "U", "Q", "Quantity", "parser", "logger", "reduce_quantities", "config"
 ]

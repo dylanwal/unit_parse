@@ -1,9 +1,9 @@
 from typing import List
 import re
 
-from .config import config
-from .logger import log_debug, log_info
-from .utils import remove_empty_str
+from unit_parse.config import config
+from unit_parse.logger import log_debug, log_info
+from unit_parse.utils import remove_empty_str
 
 
 @log_info
@@ -79,11 +79,7 @@ def condition_finder(text_in: str) -> List[str]:
     out = []
 
     if "(" in text_in or ")" in text_in:
-        _out = reduce_parenthesis(text_in)
-        if isinstance(_out, str):
-            out.append(_out)
-        else:
-            out += _out
+        out += reduce_parenthesis(text_in)
     else:
         out.append(text_in)
 
@@ -160,11 +156,7 @@ def reduce_parenthesis(text_in: str) -> List[str]:
     if len(open_index) > 1 or len(close_index) > 1:
         text_list_out = []
         for text in text_list:
-            result = reduce_parenthesis(text)
-            if isinstance(result, list):
-                text_list_out += result
-            else:
-                text_list_out.append(result)
+            text_list_out += reduce_parenthesis(text)
 
         text_list = remove_empty_str(text_list_out)
 

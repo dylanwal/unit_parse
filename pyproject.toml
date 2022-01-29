@@ -20,6 +20,13 @@ exclude_lines = [
     "if __name__ == .__main__.:"
     ]
 
+[tool.coverage.run]
+omit = [
+    "src/unit_parse/logger.py",
+    "src/unit_parse/config.py",
+    "src/unit_parse/support_files/*"
+]
+
 [tool.mypy]
 mypy_path = "src"
 check_untyped_defs = true

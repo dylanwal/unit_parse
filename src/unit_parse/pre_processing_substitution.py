@@ -60,7 +60,7 @@ def substitution(text_in: str) -> str:
     text_in = sub_sci_notation(text_in)
     text_in = reduce_ranges(text_in)
 
-    return text_in.strip()
+    return text_in.strip().strip(".")
 
 
 @log_debug
@@ -98,7 +98,7 @@ def sub_general(text_in: str, patterns: Optional[List[List[str]]]) -> str:
 
             return text_in.strip()
 
-    raise TypeError(f"Patterns must be a List[List[pattern, substitution]].")
+    raise TypeError("Patterns must be a List[List[pattern, substitution]].")
 
 
 @log_debug
@@ -173,7 +173,7 @@ def sub_sci_notation(text_in: str) -> str:
 
     found_sci_notation = re.findall("[0-9][ ]10[0-9]{1,5}", text_in)
     for exp in found_sci_notation:
-        exp_new = exp.replace("10", "*10**", 1)
+        exp_new = exp.replace(" 10", "*10**", 1)
         text_in = text_in.replace(exp, exp_new)
 
     found_sci_notation = re.findall("[0-9][ ]{1,2}10[*]{2}[-+]?[0-9]{1,5}", text_in)

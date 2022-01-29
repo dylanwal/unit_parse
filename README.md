@@ -68,7 +68,7 @@ print(result) # [[<Quantity(1.23, 'gram / centimeter ** 3')>, <Quantity(25, 'deg
 
 ### Merging Quantities
 
-Some times when you are doing parsing, you get multiple values from the parser. So it would be nice to reduce it 
+Sometimes when you are doing parsing, you get multiple values from the parser. So it would be nice to reduce it 
 down just to one value/value+condition/series+condition. `reduce_quantities` does exactly that!
 
 It will group approximate equivalent quantities and throw out bad units (units that are not like the most common). 
@@ -77,14 +77,14 @@ You can select your preference for return priority with the `order` parameter.
 ```python
 from unit_parse import Quantity, reduce_quantities
   
-quantities = [Quantity("68 degree_Fahrenheit"), Quantity("68.0 degree_Fahrenheit"), Quantity("20.0 degree_Celsius"),
+quantities = [Quantity("68 degF"), Quantity("68.0 degF"), Quantity("20.0 degC"),
               Quantity("293.15 kelvin * speed_of_light ** 2")]
   
 result = reduce_quantities(quantities)
-print(result)  # Quantity("68 degF")],
+print(result)  # Quantity("68 degF")
 ```
 
-
+---
 ---
 ## Logging
 
@@ -164,16 +164,104 @@ Output:
 Yep, there's alot of them! 
 
 ```python
-    # Simple conversions
-    5 -> 5 dimensionless
-    5 g -> 5 gram
-    5 g/ml -> 5.0 gram / milliliter
-    1 K -> 1 kelvin
-
-    # stuff
+# Simple conversions
+    5 --> 5
+    5 g --> 5 g
+    5 g/ml --> 5.0 g / ml
+    1 K --> 1 K
+    40 °F --> 40 °F
+    -40 °F --> -40 °F
+    170°C --> 170 °C
+    40°F --> 40 °F
+    20.80 mmHg --> 20.8 mmHg
+    20.80 mm Hg --> 20.8 mmHg
+# scientific notation
+    15*10**2 s --> 1500 s
+    15*10^2 s --> 1500 s
+    15 10**2 s --> 1500 s
+    8.20x10**+1 ppm --> 82.0 ppm
+    8.20x10+1 ppm --> 82.0 ppm
+    5e1 g/mol --> 50.0 g / mol
+    5E1 g/mol --> 50.0 g / mol
+    5 e1 g/mol --> 50.0 g / mol
+    5 E1 g/mol --> 50.0 g / mol
+    5e+1 g/mol --> 50.0 g / mol
+    5E-1 g/mol --> 0.5 g / mol
+    −66.11·10-62 ml/mol --> -6.611e-61 ml / mol
+    −66.11·10+62 ml/mol --> -6.611e+63 ml / mol
+    −66.11·1062 ml/mol --> -6.611e+63 ml / mol
+# messed up units/ units with powers
+    2.3 gcm --> 2.3 cm * g
+    5e5 gmol/s --> 500000.0 g * mol / s
+    2.3 gcm**3 --> 2.3 cm ** 3 * g
+    2.3 gcm**3 --> 2.3 cm ** 3 * g
+    2.3     g --> 2.3 g
+    1.10*10**-05 atm-m**3/mole --> 1.1000000000000001e-05 atm * m ** 3 / mol
+    -54.6e-5 atm-m**3/mole --> -0.000546 atm * m ** 3 / mol
+    2.3 mlgcm --> 2.3 cm * g * ml
+    42.3 gcm-3 --> 42.3 g / cm ** 3
+    42.3 g cm-3 --> 42.3 g / cm ** 3
+    −66.11·10-62 cm3/mol --> -6.611e-61 cm ** 3 / mol
+    −66.11·10+62 cm3/mol --> -6.611000000000001e+63 cm ** 3 / mol
+    −66.11·1062 cm3/mol --> -6.611000000000001e+63 cm ** 3 / mol
+    345.234 KCAL/MOLE --> 345.234 kcal / mol
+# parenthesis (brackets turn into parenthesis)
+    (4.0 °C) --> 4.0 °C
+    [4.0 °C] --> 4.0 °C
+    4.0 (°C) --> 4.0 °C
+    4.0 (°C)) --> 4.0 °C
+    )4.0 (°C) --> 4.0 °C
+    (4.0 (°C) --> 4.0 °C
+    ()4.0 (°C) --> 4.0 °C
+    4.0 °C [39.2 g/[mol * s]] --> [[<Quantity(4.0, 'degree_Celsius')>, <Quantity(39.2, 'gram / mole / second')>]]
+    1.0722 at 68 °F (EPA, 1998) --> [[1.0722, <Quantity(68, 'degree_Fahrenheit')>]]
+# conditions
+    37.34 kJ/mole (at 25 °C) --> [[<Quantity(37.34, 'kilojoule / mole')>, <Quantity(25, 'degree_Celsius')>]]
+    20.8 mm Hg @ 25 °C --> [[<Quantity(20.8, 'millimeter_Hg')>, <Quantity(25, 'degree_Celsius')>]]
+    20.8 mm Hg (25 °C) --> [[<Quantity(20.8, 'millimeter_Hg')>, <Quantity(25, 'degree_Celsius')>]]
+    20.8 mm Hg at 25 °C --> [[<Quantity(20.8, 'millimeter_Hg')>, <Quantity(25, 'degree_Celsius')>]]
+    -4,395.63 kJ/mol at 25 °C --> [[<Quantity(-4395.63, 'kilojoule / mole')>, <Quantity(25, 'degree_Celsius')>]]
+# list of quantities
+    18 mm Hg; 20 mm Hg --> [<Quantity(18, 'millimeter_Hg')>, <Quantity(20, 'millimeter_Hg')>]
+    18 mm Hg; 20 mm Hg --> [<Quantity(18, 'millimeter_Hg')>, <Quantity(20, 'millimeter_Hg')>]
+    18 mm Hg @ 68 °F; 20 mm Hg @ 77° F --> [[<Quantity(18, 'millimeter_Hg')>, <Quantity(68, 'degree_Fahrenheit')>], [<Quantity(20, 'millimeter_Hg')>, <Quantity(77, 'degree_Fahrenheit')>]]
+    18 mm Hg @ 68 °F ; 20 mm Hg @ 77° F (NTP, 1992) --> [[<Quantity(18, 'millimeter_Hg')>, <Quantity(68, 'degree_Fahrenheit')>], [<Quantity(20, 'millimeter_Hg')>, <Quantity(77, 'degree_Fahrenheit')>]]
+    18 mm Hg at 68 °F ; 20 mm Hg at 77 °F --> [[<Quantity(18, 'millimeter_Hg')>, <Quantity(68, 'degree_Fahrenheit')>], [<Quantity(20, 'millimeter_Hg')>, <Quantity(77, 'degree_Fahrenheit')>]]
+    Low threshold= 13.1150 mg/cu m; High threshold= 26840 mg/cu m; Irritating concn= 22875 mg/cu m. --> 22875.0 mg / m ** 3
+# ranges
+    115.2-115.3 °C --> 115.2 °C
+    115.2 - 115.3 °C --> 115.2 °C
+# words
+    8.20x10+1 ppm; pure --> 82.0 ppm
+    40 °F (NTP, 1992) --> 40 °F
+    4.0 °C (39.2 °F) - closed cup --> 4.0 °C
+    4.0 °C [39.2 g/[mol * s]] - closed cup --> [[<Quantity(4.0, 'degree_Celsius')>, <Quantity(39.2, 'gram / mole / second')>]]
+    4.0 °C [39.2 g/[mol * s] approx.] - closed cup --> [[<Quantity(4.0, 'degree_Celsius')>, <Quantity(39.2, 'gram / mole / second')>]]
+    4.0 °C [39.2g/[mol*s] approx.] - closed cup --> [[<Quantity(4.0, 'degree_Celsius')>, <Quantity(39.2, 'gram / mole / second')>]]
+    4.0 °C [39.2g/[mol*s]approx.] - closed cup --> [[<Quantity(4.0, 'degree_Celsius')>, <Quantity(39.2, 'gram / mole / second')>]]
+    Detection in water: 0.73 ppm; Chemically pure --> 0.73 ppm
+    Odor Threshold Range: 0.15 to 25 ppm --> 0.15 ppm
+    0.05 ppm purity specified --> 0.05 ppm
+    Odor detection in air, 0.05 ppm (purity not specified) --> 0.05 ppm
+    Relative density (water = 1): 1.04-1.13 --> 1.04
+    Density approximately 6.5 lb / gal. --> 6.5 lb / gal
+# duplicates of same quantity different units
+    4.0 °C (39.2 °F) --> 4.0 °C
+    -7991 cal/g = -334.6X10+5 J/KG --> -33460000.000000004 J / kg
+# complex
+    18 mm Hg at 68 °F ; 20 mm Hg at 77° F (NTP, 1992) --> [[<Quantity(18, 'millimeter_Hg')>, <Quantity(68, 'degree_Fahrenheit')>], [<Quantity(20, 'millimeter_Hg')>, <Quantity(77, 'degree_Fahrenheit')>]]
+    Sound travels at 0.34 km/s --> 0.34 km / s
+    Pass me a 300 ml beer. --> 300 ml
 ```
 
 
+Stuff it gets wrong. No one is perfect!
+```python
+Index of refraction: 1.50920 @ 20 °C/D --> [[1.5092, <Quantity(293.15, 'kelvin / debye')>]]
+Vapor pressure, kPa at 20 °C: 2.0 --> 2.0
+```
+
+---
 ---
 ## Configuration
 
@@ -272,7 +360,7 @@ result = unit_parse.parser("100 MOL")  # pint is case-sensitive, so this will re
 print(result)  # Quantity("100 mole")
 ```
 
-
+---
 ---
 ## Notes
 

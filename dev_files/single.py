@@ -23,7 +23,7 @@ logger.setLevel(logging.DEBUG)
 # ]
 # testing_func(remove_words, test_remove_words, {"words": config.english_dict})
 
-result = parser("1.0722 at 68 °F (EPA, 1998)")
+result = parser("Density approximately 6.5 lb / gal.")
 
 print(result)
 

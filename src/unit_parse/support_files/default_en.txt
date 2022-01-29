@@ -332,7 +332,7 @@ rhe = 1 / poise
 # Amount of substance
 particle = 1 / N_A = _ = molecule
 part_per_million = 1 * particle / (1000000 * particle) = ppm
-part_per_billion = 1 * particle / (1000000000 * particle) = bpm
+part_per_billion = 1 * particle / (1000000000 * particle) = ppb
 
 # Concentration
 [concentration] = [substance] / [volume]

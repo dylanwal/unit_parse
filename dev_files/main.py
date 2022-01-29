@@ -52,7 +52,7 @@ examples = [
     ['−66.11·1062 cm3/mol', Quantity('-66.11*10**62 cm**3/mol')],
     ["345.234 KCAL/MOLE", Quantity("345.234 kcal/mole")],
 
-    # parenthesis (brackets turned to parenthesis)
+    # parenthesis (brackets turn into parenthesis)
     ["(4.0 °C)", Quantity("4 degC")],
     ["[4.0 °C]", Quantity("4 degC")],
     ["4.0 (°C)", Quantity("4 degC")],
@@ -99,6 +99,7 @@ examples = [
     ["0.05 ppm purity specified", Quantity("0.05 part_per_million")],
     ["Odor detection in air, 0.05 ppm (purity not specified)", Quantity("0.05 part_per_million")],
     ["Relative density (water = 1): 1.04-1.13", Quantity("1.04")],
+    ["Density approximately 6.5 lb / gal.", Quantity("6.5 lb/ gal")],
 
     # duplicates of same quantity different units
     ["4.0 °C (39.2 °F)", Quantity("4 degC")],
@@ -118,7 +119,6 @@ examples = [
 ]
 
 
-
 def pre_process_values():
     for example in examples:
         result = parser(example[0])
@@ -130,4 +130,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    pre_process_values()

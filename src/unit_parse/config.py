@@ -1,27 +1,25 @@
 import os
 import sys
+import inspect
 
 from unit_parse.logger import logger
 
 
-def _get_from_stack(obj):
+def get_unit_registry():
     """
     Gets object from Python stack/globals
     Stops at first object it finds
 
     """
-    for i in range(100):  # 100 is to limit the depth it looks
-        frames = sys._getframe(i)
-        globals_ = frames.f_globals
-        found_obj = [globals_[k] for k, v in globals_.items() if isinstance(v, obj) and k[0] != "_"]
-        if found_obj:
-            found_obj = found_obj[0]
-            break
+    stack = inspect.stack()
+    for frame in stack:
+        attrs: dict = frame.frame.f_locals
+        for attr in attrs.values():
+            if hasattr(attr, "_REGISTRY"):
+                return attr._REGISTRY
     else:
-        mes = f"{obj} not found in globals."
+        mes = "Pint UnitRegistry not found."
         raise Exception(mes)
-
-    return found_obj
 
 
 def check_for_pint():
@@ -41,9 +39,9 @@ def check_for_pint():
         logger.warning("'Pint' module found in stack. (you have 'import pint' somewhere in your code).")
         # get unit registry
         try:
-            u = _get_from_stack(modules["pint.registry"].UnitRegistry)
+            u_ = get_unit_registry()
             logger.warning("\033[32m Unit registry found. :) \033[0m")
-            return u
+            return u_
         except Exception:
             logger.warning("Pint unit registry not found in stack. Loading 'unit_parser' registry. (Note: "
                            "Pint unit registries are not interoperable. ")
@@ -51,8 +49,10 @@ def check_for_pint():
     # if no pint found, load local
     import pint
     current_path = os.path.dirname(os.path.realpath(__file__))
-    return pint.UnitRegistry(autoconvert_offset_to_baseunit=True,
+    u_ = pint.UnitRegistry(autoconvert_offset_to_baseunit=True,
                              filename=os.path.join(current_path, "support_files\\default_en.txt"))
+    u_.default_format = "~"
+    return u_
 
 
 # set pint units
@@ -99,8 +99,8 @@ class Config:
             ["°C", "degC"],  # eliminates issue with capitalization step
             ["(?<=[0-9]{1})[ ]{0,1}X[ ]{0,1}(?=[0-9]{1})", "*"],  # unify multiplication symbols
             ["(?<=[0-9]{1})[ ]{0,1}x[ ]{0,1}(?=[0-9]{1})", "*"],  # unify multiplication symbols
-            ["\[", "("],  # make all brackets parenthesis
-            ["\]", ")"],  # make all brackets parenthesis
+            ["\[", "("],  # noqa: W605 # make all brackets parenthesis
+            ["\]", ")"],  # noqa: W605 # make all brackets parenthesis
             ["^.*={1}", ""],  # delete everything in front of equal
             ["^.*:{1}", ""],  # delete everything in front of collen
             ["( to )", "-"],   # unify how range are represented

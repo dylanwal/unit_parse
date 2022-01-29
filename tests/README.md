@@ -57,7 +57,7 @@ Run this in the terminal:
 
 **Coverage:**
 
-`pytest --cov-report xml:./reports/coverage/cov.xml`
+`pytest --cov-report xml:./reports/coverage/coverage.xml`
 
 `genbadge coverage -o -> ./tests/badges/coverage-badge.svg`
 

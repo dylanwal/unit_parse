@@ -1,7 +1,7 @@
 from typing import List, Any, Optional, Union
 import re
 
-from .config import Quantity
+from unit_parse.config import Quantity
 
 
 def quantity_approx_equal(quantity1: Quantity, quantity2: Quantity, cutoff: Optional[float] = 0.02) -> bool:
@@ -16,8 +16,8 @@ def quantity_approx_equal(quantity1: Quantity, quantity2: Quantity, cutoff: Opti
     return False
 
 
-def quantity_difference(quantity1: Quantity, quantity2: Quantity) -> float:
-    """ Returns T/F for any two quantities"""
+def quantity_difference(quantity1: Quantity, quantity2: Quantity) -> Union[int, float]:
+    """ Returns absolute difference between quantities. """
     if not isinstance(quantity1, Quantity) or not isinstance(quantity2, Quantity):
         return 1
 
@@ -59,7 +59,7 @@ def remove_empty_str(list_in: List[Any]) -> List[Any]:
 def contains_number(obj_in: str) -> bool:
     """ Checks list to see if it has a number in it anywhere."""
     if isinstance(obj_in, str):
-        return bool(re.search('\d', obj_in))
+        return bool(re.search('\d', obj_in))  # noqa: W605
     else:
         raise TypeError
 
