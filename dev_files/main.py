@@ -81,6 +81,9 @@ examples = [
      [[Quantity('18 mmHg'), Quantity('68 degF')], [Quantity('20 mmHg'), Quantity('77 degF')]]],
     ["Low threshold= 13.1150 mg/cu m; High threshold= 26840 mg/cu m; Irritating concn= 22875 mg/cu m.",
      Quantity('22875 mg/m**3')],
+    ['Melting point: 75% -17.5 °C; 80% 4.6 °C; 85% 21 °C.',
+     [Quantity("-17.5 degC"), Quantity("4.6 degC"), Quantity("21 degC")]],
+
 
     # ranges
     ['115.2-115.3 °C', Quantity('115.2 degC')],
@@ -115,6 +118,8 @@ examples = [
     # stuff it gets wrong
     ['Index of refraction: 1.50920 @ 20 °C/D', [Quantity('1.50920'), Quantity('20 degC')]],
     ['Vapor pressure, kPa at 20 °C: 2.0', [Quantity('2.0 kPa'), Quantity('20 degC')]],
+    ['Specific optical rotation @ 15 °C/D + 230 deg (concn by volume = 1.8 in chloroform)',
+     Quantity("230 deg")]
 
 ]
 

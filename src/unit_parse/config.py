@@ -50,7 +50,7 @@ def check_for_pint():
     import pint
     current_path = os.path.dirname(os.path.realpath(__file__))
     u_ = pint.UnitRegistry(autoconvert_offset_to_baseunit=True,
-                             filename=os.path.join(current_path, "support_files\\default_en.txt"))
+                           filename=os.path.join(current_path, "support_files\\default_en.txt"))
     u_.default_format = "~"
     return u_
 
@@ -103,7 +103,7 @@ class Config:
             ["\]", ")"],  # noqa: W605 # make all brackets parenthesis
             ["^.*={1}", ""],  # delete everything in front of equal
             ["^.*:{1}", ""],  # delete everything in front of collen
-            ["( to )", "-"],   # unify how range are represented
+            ["( to )", "-"],  # unify how range are represented
             ["(?<=[a-zA-Z])-(?=[a-zA-Z])", " "],  # turn dashes between text into spaces so dictionary can remove
             ["mm Hg", "mmHg"],  # pint gets confused
             ["KG", "kg"],  # pint gets confused
@@ -114,6 +114,7 @@ class Config:
             ["cu m", "m**3"],  # pint gets confused
             ["cu cm", "cm**3"],  # pint gets confused
             ["cu mm", "mm**3"],  # pint gets confused
+            ["[0-9]{1,5} ?%", ""]
         ]
 
         self.pre_proc_split = [";"]

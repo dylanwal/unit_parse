@@ -35,7 +35,7 @@ pip install unit_parse
 
 ## Dependencies
 
-[Pint]((https://github.com/hgrecco/pint)) - Provides unit conversions of cleaned and parsed quantities.
+[Pint](https://github.com/hgrecco/pint) - Provides unit conversions of cleaned and parsed quantities.
 
 ---
 ---
@@ -50,7 +50,7 @@ Pass string you want to parse to `parser()`.
 from unit_parse import parser
 
 result = parser("1.23 g/cm3 (at 25 °C)")
-print(result) # [[<Quantity(1.23, 'gram / centimeter ** 3')>, <Quantity(25, 'degree_Celsius')>]]
+print(result) # [[<Quantity(1.23, 'g / cm ** 3')>, <Quantity(25, 'degC')>]]
 ```
 'Quantity' are [pint quantities](https://pint.readthedocs.io/en/stable/defining-quantities.html). 
 

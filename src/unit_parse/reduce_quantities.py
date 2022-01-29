@@ -94,6 +94,8 @@ def quantity_list_to_dict(data_in: list[Any]) -> dict:
         "Quantity" : {"type": QuantClass(Enum),"count": int}
 
     """
+    data_in = clean_data_in(data_in)
+
     data_dict = {}
     for i, data in enumerate(data_in):
         if isinstance(data, Quantity):
@@ -122,18 +124,52 @@ def quantity_list_to_dict(data_in: list[Any]) -> dict:
         elif isinstance(data, list):
             if isinstance(data[0], list):
                 if len(data) == 1:
-                    data_dict[i] = {"quantity": data, "unit":  _get_dim(data[0][0]), "count": 1,
-                                    "type": QuantClass.CONDITIONS}
+                    data_dict[i] = {
+                        "quantity": data, "unit": _get_dim(data[0][0]), "count": 1,
+                        "type": QuantClass.CONDITIONS
+                    }
                 else:
                     data_dict[i] = {
                         "quantity": data, "count": 1, "len": len(data[0]), "unit": _get_dim([i[0] for i in data]),
                         "type": QuantClass.SERIES_CONDITIONS
                     }
             else:
-                data_dict[i] = {"quantity": data, "count": 1, "len": len(data), "unit": _get_dim(data),
-                                "type": QuantClass.SERIES}
+                data_dict[i] = {
+                    "quantity": data, "count": 1, "len": len(data), "unit": _get_dim(data),
+                    "type": QuantClass.SERIES
+                }
 
     return data_dict
+
+
+def clean_data_in(data_in: list[Any]) -> list[Any]:
+    """ Removes list[] of length 1. """
+    out = []
+    for obj in data_in:
+        if isinstance(obj, list):
+            if len(obj) == 1:
+                if isinstance(obj[0], list):
+                    if len(obj[0]) == 1:
+                        out.append(obj[0][0])
+                    else:
+                        out.append(obj)
+                else:
+                    out.append(obj[0])
+            else:
+                sub_out = []
+                for obj_ in obj:
+                    if isinstance(obj_, list):
+                        if len(obj_) == 1:
+                            sub_out.append(obj_[0])
+                        else:
+                            sub_out.append(obj_)
+                    else:
+                        sub_out.append(obj_)
+                out.append(sub_out)
+        else:
+            out.append(obj)
+
+    return out
 
 
 def _get_dim(obj: Union[int, float, Quantity]):
@@ -218,7 +254,7 @@ def get_middle_quantity(data_in: list[Quantity]) -> Quantity:
     """ Remove data furthest from average till 1 point left."""
     data_in.sort()
     if len(data_in) % 2 == 0:
-        index = int(len(data_in)/2)
+        index = int(len(data_in) / 2)
     else:
         index = int((len(data_in) - 1) / 2)
 

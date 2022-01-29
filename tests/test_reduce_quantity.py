@@ -73,6 +73,8 @@ examples = [  # [Input, Output]
     [[[[Q("-1500 degC"), Q("1 mmHg")]], Q("-41.6 degC"), Q("-42 degC"), Q("-40 degC"), Q("-40 degC")],
      Q("-40 degC")],
 
+    [[[Q("5 degC")], [[Q("5 degC")]], [[Q("5 degC")], Q("3 degC")],  Q("5.4 degC"), 5.4], [Q("5 degC"), Q("3 degC")]],
+
     [[[[Q('18 mmHg'), Q('68 degF')], [Q('20 mm_Hg'), Q('77 degF')]], Q('20.8 mmHg'), Q('2.0'), Q('16 mmHg'),
       Q('16 mmHg'), [[Q('16 mmHg'), Q('68 degF')], [Q('19 mm_Hg'), Q('77 degF')]]],
      [[Q('16 mmHg'), Q('68 degF')], [Q('19 mm_Hg'), Q('77 degF')]]],
