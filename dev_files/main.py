@@ -71,8 +71,7 @@ examples = [
     ["-4,395.63 kJ/mol at 25 °C", [[Quantity('-4395.63 kJ/mol'), Quantity('25 degC')]]],
 
     # list of quantities
-    ['18 mm Hg; 20 mm Hg', [Quantity('18 mmHg'), Quantity('20 mmHg')]],
-    ['18 mm Hg; 20 mm Hg', [Quantity('18 mmHg'), Quantity('20 mmHg')]],
+    ['18 mm Hg; 20 mm Hg', Quantity('20 mmHg')],
     ['18 mm Hg @ 68 °F; 20 mm Hg @ 77° F',
      [[Quantity('18 mmHg'), Quantity('68 degF')], [Quantity('20 mmHg'), Quantity('77 degF')]]],
     ['18 mm Hg @ 68 °F ; 20 mm Hg @ 77° F (NTP, 1992)',
@@ -81,9 +80,7 @@ examples = [
      [[Quantity('18 mmHg'), Quantity('68 degF')], [Quantity('20 mmHg'), Quantity('77 degF')]]],
     ["Low threshold= 13.1150 mg/cu m; High threshold= 26840 mg/cu m; Irritating concn= 22875 mg/cu m.",
      Quantity('22875 mg/m**3')],
-    ['Melting point: 75% -17.5 °C; 80% 4.6 °C; 85% 21 °C.',
-     [Quantity("-17.5 degC"), Quantity("4.6 degC"), Quantity("21 degC")]],
-
+    ['Melting point: 75% -17.5 °C; 80% 4.6 °C; 85% 21 °C.', Quantity("4.6 degC")],
 
     # ranges
     ['115.2-115.3 °C', Quantity('115.2 degC')],
@@ -113,7 +110,8 @@ examples = [
                                                            [Quantity('20 mmHg'), Quantity('77 degF')]]],
     ['Sound travels at 0.34 km/s', Quantity('0.34 km/s')],
     ['Pass me a 300 ml beer.', Quantity("300 ml")],
-
+    ['13.565 kcal/mol at 25 °C; 10.60 kcal/mol at boiling point',
+     [[Quantity("13.565 kcal/mol"), Quantity("25 °C")]]],
 
     # stuff it gets wrong
     ['Index of refraction: 1.50920 @ 20 °C/D', [Quantity('1.50920'), Quantity('20 degC')]],
@@ -135,4 +133,5 @@ def main():
 
 
 if __name__ == '__main__':
+    # main()
     pre_process_values()

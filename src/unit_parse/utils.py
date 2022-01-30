@@ -9,16 +9,27 @@ def quantity_approx_equal(quantity1: Quantity, quantity2: Quantity, cutoff: Opti
     if not isinstance(quantity1, Quantity) or not isinstance(quantity2, Quantity):
         return False
 
-    if quantity1.dimensionality == quantity2.dimensionality and \
-            abs((quantity1 - quantity2) / quantity2) <= cutoff:
-        return True
+    if quantity1.dimensionality == quantity2.dimensionality:
+        if quantity2.to_base_units().m == 0:  # avoid divide by zero error
+            if quantity1.to_base_units().m == 0:
+                return True
+            return False
+
+        if abs((quantity1 - quantity2) / quantity2) <= cutoff:
+            return True
 
     return False
 
 
 def quantity_difference(quantity1: Quantity, quantity2: Quantity) -> Union[int, float]:
     """ Returns absolute difference between quantities. """
-    if not isinstance(quantity1, Quantity) or not isinstance(quantity2, Quantity):
+    if isinstance(quantity1, (int, float)):
+        quantity1 = Quantity(quantity1)
+    if isinstance(quantity2, (int, float)):
+        quantity2 = Quantity(quantity2)
+
+    if not isinstance(quantity1, Quantity) or not isinstance(quantity2, Quantity) or \
+            quantity1.dimensionality != quantity2.dimensionality:
         return 1
 
     return abs((quantity1 - quantity2) / quantity2)

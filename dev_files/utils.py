@@ -1,7 +1,7 @@
 import logging
 
 from testing_func import testing_func, test_logger
-from unit_parse import logger, Unit
+from unit_parse import logger, Unit, Q
 from unit_parse.utils import *
 
 test_logger.setLevel(logging.DEBUG)
@@ -71,3 +71,12 @@ test_remove_empty_cells = [  # [Input, Output]
 
 ]
 testing_func(remove_empty_cells, test_remove_empty_cells)
+
+
+examples_quantity_difference = [
+    [Q("5 g"), Q("0.5"), {"quantity2": Q("10 g")}],
+
+    [5, 1, {"quantity2": Q("10 g")}],
+]
+testing_func(quantity_difference, examples_quantity_difference)
+

@@ -61,8 +61,6 @@ print(result) # [[<Quantity(1.23, 'g / cm ** 3')>, <Quantity(25, 'degC')>]]
 * **Single value with condition:** [[quantity, condition]]  
     * `[['25 degC', '1 bar']]`
     * boil temperature is 25 °C at 1 bar of pressure
-* **Multiple values:**  [quantity, quantity, ...] 
-    * `[25 degC, 50 degC]`
 * **Multiple values with conditions:** [[quantity, condition], [quantity, condition], ...]
     * `[['25 degC', '1 bar'], ['50 degC', '5 bar'], ['100 degC', '10 bar']]`
 
@@ -193,17 +191,17 @@ Yep, there's alot of them!
 # messed up units/ units with powers
     2.3 gcm --> 2.3 cm * g
     5e5 gmol/s --> 500000.0 g * mol / s
-    2.3 gcm**3 --> 2.3 cm ** 3 * g
-    2.3 gcm**3 --> 2.3 cm ** 3 * g
+    2.3 gcm**3 --> 2.3 cm**3 * g
+    2.3 gcm**3 --> 2.3 cm**3 * g
     2.3     g --> 2.3 g
-    1.10*10**-05 atm-m**3/mole --> 1.1000000000000001e-05 atm * m ** 3 / mol
-    -54.6e-5 atm-m**3/mole --> -0.000546 atm * m ** 3 / mol
+    1.10*10**-05 atm-m**3/mole --> 1.1000000000000001e-05 atm * m**3 / mol
+    -54.6e-5 atm-m**3/mole --> -0.000546 atm * m**3 / mol
     2.3 mlgcm --> 2.3 cm * g * ml
-    42.3 gcm-3 --> 42.3 g / cm ** 3
-    42.3 g cm-3 --> 42.3 g / cm ** 3
-    −66.11·10-62 cm3/mol --> -6.611e-61 cm ** 3 / mol
-    −66.11·10+62 cm3/mol --> -6.611000000000001e+63 cm ** 3 / mol
-    −66.11·1062 cm3/mol --> -6.611000000000001e+63 cm ** 3 / mol
+    42.3 gcm-3 --> 42.3 g / cm**3
+    42.3 g cm-3 --> 42.3 g / cm**3
+    −66.11·10-62 cm3/mol --> -6.611e-61 cm**3 / mol
+    −66.11·10+62 cm3/mol --> -6.611000000000001e+63 cm**3 / mol
+    −66.11·1062 cm3/mol --> -6.611000000000001e+63 cm**3 / mol
     345.234 KCAL/MOLE --> 345.234 kcal / mol
 # parenthesis (brackets turn into parenthesis)
     (4.0 °C) --> 4.0 °C
@@ -222,12 +220,11 @@ Yep, there's alot of them!
     20.8 mm Hg at 25 °C --> [[<Quantity(20.8, 'millimeter_Hg')>, <Quantity(25, 'degree_Celsius')>]]
     -4,395.63 kJ/mol at 25 °C --> [[<Quantity(-4395.63, 'kilojoule / mole')>, <Quantity(25, 'degree_Celsius')>]]
 # list of quantities
-    18 mm Hg; 20 mm Hg --> [<Quantity(18, 'millimeter_Hg')>, <Quantity(20, 'millimeter_Hg')>]
-    18 mm Hg; 20 mm Hg --> [<Quantity(18, 'millimeter_Hg')>, <Quantity(20, 'millimeter_Hg')>]
+    18 mm Hg; 20 mm Hg --> 20 mmHg
     18 mm Hg @ 68 °F; 20 mm Hg @ 77° F --> [[<Quantity(18, 'millimeter_Hg')>, <Quantity(68, 'degree_Fahrenheit')>], [<Quantity(20, 'millimeter_Hg')>, <Quantity(77, 'degree_Fahrenheit')>]]
     18 mm Hg @ 68 °F ; 20 mm Hg @ 77° F (NTP, 1992) --> [[<Quantity(18, 'millimeter_Hg')>, <Quantity(68, 'degree_Fahrenheit')>], [<Quantity(20, 'millimeter_Hg')>, <Quantity(77, 'degree_Fahrenheit')>]]
     18 mm Hg at 68 °F ; 20 mm Hg at 77 °F --> [[<Quantity(18, 'millimeter_Hg')>, <Quantity(68, 'degree_Fahrenheit')>], [<Quantity(20, 'millimeter_Hg')>, <Quantity(77, 'degree_Fahrenheit')>]]
-    Low threshold= 13.1150 mg/cu m; High threshold= 26840 mg/cu m; Irritating concn= 22875 mg/cu m. --> 22875.0 mg / m ** 3
+    Low threshold= 13.1150 mg/cu m; High threshold= 26840 mg/cu m; Irritating concn= 22875 mg/cu m. --> 22875.0 mg / m**3
 # ranges
     115.2-115.3 °C --> 115.2 °C
     115.2 - 115.3 °C --> 115.2 °C
@@ -259,6 +256,7 @@ Stuff it gets wrong. No one is perfect!
 ```python
 Index of refraction: 1.50920 @ 20 °C/D --> [[1.5092, <Quantity(293.15, 'kelvin / debye')>]]
 Vapor pressure, kPa at 20 °C: 2.0 --> 2.0
+Specific optical rotation @ 15 °C/D + 230 deg (concn by volume = 1.8 in chloroform) --> 1.8
 ```
 
 ---

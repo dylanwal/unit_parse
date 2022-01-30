@@ -90,9 +90,23 @@ def test_remove_empty_cells(input_, output_):
     assert output_ == remove_empty_cells(input_)
 
 
+examples_quantity_approx_equal = [
+    [[Q("5 g"), Q("5.2 g")], False],
+    [[Q("5 g"), Q("10 g")], False],
+    [[Q("10 g"), 5], False],
+    [[5, Q("5 kg")], False],
+    [[Q("0.1 psi"), Q("0 psi")], False],
+]
+
+
+@pytest.mark.parametrize("input_, output_", examples_quantity_approx_equal)
+def test_quantity_approx_equal(input_, output_):
+    assert output_ == quantity_approx_equal(input_[0], input_[1])
+
+
 examples_quantity_difference = [
     [[Q("5 g"), Q("10 g")], Q("0.5")],
-
+    [[5, 5], 0],
     [[5, Q("5 kg")], 1],
 ]
 

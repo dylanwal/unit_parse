@@ -22,8 +22,8 @@ examples = [
     ["15 10**2 s", Quantity("15*10**2 s")],  # space for multiplication
     ["8.20x10**+1 ppm", Quantity("8.20*10**1 ppm")],  # x for multiplication
     ["8.20x10+1 ppm", Quantity("8.20*10**1 ppm")],  # no power symbol
-    ['5e1 g/mol',  Quantity('50 g/mol')],
-    ['5E1 g/mol',  Quantity('50 g/mol')],
+    ['5e1 g/mol', Quantity('50 g/mol')],
+    ['5E1 g/mol', Quantity('50 g/mol')],
     ['5 e1 g/mol', Quantity('50 g/mol')],
     ['5 E1 g/mol', Quantity('50 g/mol')],
     ['5e+1 g/mol', Quantity('50 g/mol')],
@@ -48,7 +48,7 @@ examples = [
     ['−66.11·1062 cm3/mol', Quantity('-66.11*10**62 cm**3/mol')],
     ["345.234 KCAL/MOLE", Quantity("345.234 kcal/mole")],
 
-    # parenthesis (brackets turned to parenthesis)
+    # parenthesis (brackets turn into parenthesis)
     ["(4.0 °C)", Quantity("4 degC")],
     ["[4.0 °C]", Quantity("4 degC")],
     ["4.0 (°C)", Quantity("4 degC")],
@@ -67,8 +67,7 @@ examples = [
     ["-4,395.63 kJ/mol at 25 °C", [[Quantity('-4395.63 kJ/mol'), Quantity('25 degC')]]],
 
     # list of quantities
-    ['18 mm Hg; 20 mm Hg', [Quantity('18 mmHg'), Quantity('20 mmHg')]],
-    ['18 mm Hg; 20 mm Hg', [Quantity('18 mmHg'), Quantity('20 mmHg')]],
+    ['18 mm Hg; 20 mm Hg', Quantity('20 mmHg')],
     ['18 mm Hg @ 68 °F; 20 mm Hg @ 77° F',
      [[Quantity('18 mmHg'), Quantity('68 degF')], [Quantity('20 mmHg'), Quantity('77 degF')]]],
     ['18 mm Hg @ 68 °F ; 20 mm Hg @ 77° F (NTP, 1992)',
@@ -77,6 +76,7 @@ examples = [
      [[Quantity('18 mmHg'), Quantity('68 degF')], [Quantity('20 mmHg'), Quantity('77 degF')]]],
     ["Low threshold= 13.1150 mg/cu m; High threshold= 26840 mg/cu m; Irritating concn= 22875 mg/cu m.",
      Quantity('22875 mg/m**3')],
+    ['Melting point: 75% -17.5 °C; 80% 4.6 °C; 85% 21 °C.', Quantity("4.6 degC")],
 
     # ranges
     ['115.2-115.3 °C', Quantity('115.2 degC')],
@@ -100,12 +100,13 @@ examples = [
     # duplicates of same quantity different units
     ["4.0 °C (39.2 °F)", Quantity("4 degC")],
 
-
     # complex
     ['18 mm Hg at 68 °F ; 20 mm Hg at 77° F (NTP, 1992)', [[Quantity('18 mmHg'), Quantity('68 degF')],
                                                            [Quantity('20 mmHg'), Quantity('77 degF')]]],
     ['Sound travels at 0.34 km/s', Quantity('0.34 km/s')],
     ['Pass me a 300 ml beer.', Quantity("300 ml")],
+    ['13.565 kcal/mol at 25 °C; 10.60 kcal/mol at boiling point',
+     [[Quantity("13.565 kcal/mol"), Quantity("25 °C")]]],
 
 ]
 

@@ -2,7 +2,7 @@ import logging
 
 from testing_func import testing_func, test_logger
 from unit_parse import logger, Unit, parser
-from unit_parse.pre_processing_substitution import *
+from unit_parse.classification import quantity_classifier
 
 test_logger.setLevel(logging.DEBUG)
 logger.setLevel(logging.DEBUG)
@@ -23,8 +23,8 @@ logger.setLevel(logging.DEBUG)
 # ]
 # testing_func(remove_words, test_remove_words, {"words": config.english_dict})
 #
-result = parser('Specific optical rotation @ 15 °C/D + 230 deg (concn by volume = 1.8 in chloroform)')
-
+# result = parser('4.0 (°C)')
+result = quantity_classifier([[[["fish"]]]])
 print(result)
 
 
