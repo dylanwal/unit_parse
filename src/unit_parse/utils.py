@@ -32,6 +32,11 @@ def quantity_difference(quantity1: Quantity, quantity2: Quantity) -> Union[int, 
             quantity1.dimensionality != quantity2.dimensionality:
         return 1
 
+    if quantity2.to_base_units().m == 0:  # avoid divide by zero error
+        if quantity1.to_base_units().m == 0:
+            return True
+        return False
+
     return abs((quantity1 - quantity2) / quantity2)
 
 
