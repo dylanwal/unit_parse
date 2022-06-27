@@ -6,7 +6,7 @@
 ![tests](https://raw.githubusercontent.com/dylanwal/unit_parse/master/tests/badges/tests-badge.svg)
 ![coverage](https://raw.githubusercontent.com/dylanwal/unit_parse/master/tests/badges/coverage-badge.svg)
 ![flake8](https://raw.githubusercontent.com/dylanwal/unit_parse/master/tests/badges/flake8-badge.svg)
-![downloads](https://img.shields.io/pypi/dm/unit_parse)
+![downloads](https://static.pepy.tech/badge/unit_parse)
 ![license](https://img.shields.io/github/license/dylanwal/unit_parse)
 
 Do you have strings/text that you want to turn into quantities?
