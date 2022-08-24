@@ -1,6 +1,6 @@
+import inspect
 import os
 import sys
-import inspect
 
 from unit_parse.logger import logger
 
@@ -50,7 +50,7 @@ def check_for_pint():
     import pint
     current_path = os.path.dirname(os.path.realpath(__file__))
     u_ = pint.UnitRegistry(autoconvert_offset_to_baseunit=True,
-                           filename=os.path.join(current_path, "support_files\\default_en.txt"))
+                           filename=os.path.join(current_path, "support_files", "default_en.txt"))
     u_.default_format = "~"
     return u_
 
@@ -62,7 +62,7 @@ Q = Quantity = u.Quantity
 
 # load english dictionary
 file_path = os.path.dirname(os.path.realpath(__file__))
-path_to_dict = os.path.join(file_path, "support_files\\dictionary.txt")
+path_to_dict = os.path.join(file_path, "support_files", "dictionary.txt")
 with open(path_to_dict, 'r') as file:
     english_dict = set(file.read().split("\n"))
 
