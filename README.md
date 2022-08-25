@@ -360,12 +360,27 @@ print(result)  # Quantity("100 mole")
 
 ---
 ---
+
 ## Notes
 
 ### Pint UnitRegistry
-Pint's requires a Unit Registry to be defined. However, Unit Registries are not interoperable and will throw 
-errors if a unit from one registry is used in another. Unit_Parse will go looking to see if one has been created, 
+
+Pint's requires a Unit Registry to be defined. However, Unit Registries are not interoperable and will throw
+errors if a unit from one registry is used in another. Unit_Parse will go looking to see if one has been created,
 and if it hasn't we will make one!
 
-So if your project uses Pint already, make sure you import Pint and define the UnitRegistry before importing unit_parse.
+So if your project uses Pint already, make sure you import Pint and define the `UnitRegistry` before
+importing `unit_parse`. You must also define `Unit` and `Quantity` to make the registry discoverable.
+
+```python
+import pint
+
+u = pint.UnitRegistry()
+U = Unit = u.Unit
+Q = Quantity = u.Quantity
+
+from unit_parse import parser
+
+# your code from here…
+```
     
