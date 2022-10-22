@@ -192,8 +192,8 @@ def sub_sci_notation(text_in: str) -> str:
         text_in = text_in.replace(exp, exp_new)
 
     # remove leading zero in powers ( 5*10**-05 --> 5*10**-5)
-    text_in = re.sub('(?<=[*]{2}[-])0(?=[0-9])', "", text_in)  # neg. power
-    text_in = re.sub('(?<=[*]{2})0(?=[0-9])', "", text_in)  # pos. power
+    text_in = re.sub('(?<=[*]{2}[-])0+(?=[0-9])', "", text_in)  # neg. power
+    text_in = re.sub('(?<=[*]{2})0+(?=[0-9])', "", text_in)  # pos. power
 
     return text_in.strip()
 
