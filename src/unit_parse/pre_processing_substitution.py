@@ -158,12 +158,12 @@ def sub_sci_notation(text_in: str) -> str:
 
     found_sci_notation = re.findall("[0-9]e[-+]?[0-9]{1,5}", text_in)
     for exp in found_sci_notation:
-        exp_new = exp.replace("e", "*10**", 1)
+        exp_new = exp.replace("e+", "*10**", 1).replace("e", "*10**", 1)
         text_in = text_in.replace(exp, exp_new)
 
     found_sci_notation = re.findall("[0-9]E[-+]?[0-9]{1,5}", text_in)
     for exp in found_sci_notation:
-        exp_new = exp.replace("E", "*10**", 1)
+        exp_new = exp.replace("E+", "*10**", 1).replace("E", "*10**", 1)
         text_in = text_in.replace(exp, exp_new)
 
     found_sci_notation = re.findall("[0-9][*]10[0-9]{1,5}", text_in)

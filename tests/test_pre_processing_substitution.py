@@ -73,6 +73,7 @@ test_sci_notation = [  # [input_, output_]
     ['5.3E1 g/mol', '5.3*10**1 g/mol'],
     ['5.3 109 g/mol', '5.3*10**9 g/mol'],
     ["3.6E+00004 mg/L", "3.6*10**4 mg/L"],
+    ["3.6E00004 mg/L", "3.6*10**4 mg/L"],
 
     # negative control (no changes made)
     ['5.3*10**1 g/mol', '5.3*10**1 g/mol'],

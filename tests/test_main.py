@@ -81,6 +81,8 @@ examples = [
     # ranges
     ['115.2-115.3 °C', Quantity('115.2 degC')],
     ['115.2 - 115.3 °C', Quantity('115.2 degC')],
+    ["1-2 °C",  Quantity('1 degC')],
+    ["0-1 °C",  Quantity('0 degC')],
 
     # words
     ["8.20x10+1 ppm; pure", Quantity("8.20*10**1 ppm")],
