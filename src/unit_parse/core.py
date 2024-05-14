@@ -102,10 +102,11 @@ def try_to_convert(text: str) -> Union[float, Unit, Quantity, None]:
         return float(text)
     except Exception:
         pass
-    try:
-        return Unit(text)
-    except Exception:
-        pass
+    if not contains_number(text):
+        try:
+            return Unit(text)
+        except Exception:
+            pass
     try:
         return Quantity(text)
     except Exception:
