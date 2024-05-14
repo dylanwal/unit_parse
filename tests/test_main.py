@@ -1,7 +1,6 @@
 import pytest
 
-from unit_parse import parser, Quantity
-
+from unit_parse import Quantity, parser
 
 examples = [
     # standard examples
@@ -65,6 +64,7 @@ examples = [
     ['20.8 mm Hg (25 °C)', [[Quantity('20.8 mmHg'), Quantity('25 degC')]]],
     ['20.8 mm Hg at 25 °C', [[Quantity('20.8 mmHg'), Quantity('25 degC')]]],
     ["-4,395.63 kJ/mol at 25 °C", [[Quantity('-4395.63 kJ/mol'), Quantity('25 degC')]]],
+    ["1.0A @ 25kW", [[Quantity('1.0A'), Quantity('25kW')]]],
 
     # list of quantities
     ['18 mm Hg; 20 mm Hg', Quantity('20 mmHg')],
