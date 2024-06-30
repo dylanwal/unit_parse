@@ -48,9 +48,7 @@ def check_for_pint():
 
     # if no pint found, load local
     import pint
-    current_path = os.path.dirname(os.path.realpath(__file__))
-    u_ = pint.UnitRegistry(autoconvert_offset_to_baseunit=True,
-                           filename=os.path.join(current_path, "support_files", "default_en.txt"))
+    u_ = pint.UnitRegistry(autoconvert_offset_to_baseunit=True)
     u_.default_format = "~"
     return u_
 
