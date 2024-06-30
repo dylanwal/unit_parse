@@ -1,6 +1,6 @@
 import pytest
 
-from unit_parse import parser, Quantity, config
+from unit_parse import parser, Quantity
 
 
 examples = [

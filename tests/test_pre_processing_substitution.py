@@ -1,6 +1,9 @@
 import pytest
 
-from unit_parse.pre_processing_substitution import *
+from unit_parse import config
+from unit_parse.pre_processing_substitution import reduce_ranges, remove_strings, remove_words
+from unit_parse.pre_processing_substitution import sub_general, sub_power, sub_sci_notation
+
 
 remove_strings_examples = [
     # complex

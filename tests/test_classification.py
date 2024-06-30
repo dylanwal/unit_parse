@@ -1,7 +1,7 @@
 import pytest
 
-from unit_parse.classification import *
 from unit_parse import Q, U
+from unit_parse.classification import ClassificationObj, QuantClass, quantity_classifier
 
 
 example_quantity_classifier = [

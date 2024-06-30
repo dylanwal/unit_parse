@@ -1,7 +1,9 @@
 import pytest
 
 from unit_parse import Unit, Q
-from unit_parse.utils import *
+from unit_parse.utils import contains_number, flatten_list, get_list_depth
+from unit_parse.utils import quantity_approx_equal, quantity_difference, remove_empty_cells
+from unit_parse.utils import sig_figs, split_list
 
 example_split_list = [
     # positive control (changes)
