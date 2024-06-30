@@ -1,5 +1,3 @@
-import pytest
-
 import pint
 u = pint.UnitRegistry()
 U = Unit = u.Unit

@@ -1,6 +1,7 @@
 import pytest
 
-from unit_parse.pre_processing_multiple import *
+from unit_parse.pre_processing_multiple import condition_finder, multiple_quantities, reduce_parenthesis
+
 
 examples = [  # [Input, Output]
     # positive control (works)
