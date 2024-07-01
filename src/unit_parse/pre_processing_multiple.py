@@ -3,7 +3,7 @@ import re
 
 from unit_parse.config import config
 from unit_parse.logger import log_debug, log_info
-from unit_parse.utils import remove_empty_str
+from unit_parse.utils import contains_number, remove_empty_str
 
 
 @log_info
@@ -52,6 +52,33 @@ def multiple_quantities(text_in: str, sep: list[str]) -> List[str]:
     result = re.split(sep, text_in)
     return [text.strip() for text in result]
 
+def split_on_quantities(text_in: str) -> list[str]:
+    """
+    Split the string into a list of strings, where each string contains a single quantity.
+
+    Examples
+    --------
+    '18 mm Hg @ 68 °F' --> ['18 mm Hg @', '68 °F']
+    'Melting point: 75% -17.5 °C' --> ['Melting point: 75%', '-17.5 °C']
+    'Pass me a 300 ml beer.' --> ['Pass me a 300 ml beer.']
+    """
+    # Use regular expression to split the input text into possible groups of quantities
+    # The pattern looks for spaces (\s) followed by a digit [-]?(\d)
+    # The positive lookahead (?=...) ensures that the split happens without
+    # consuming the digit
+    quantities = re.split(r'(\s+)(?=[-]?\d)', text_in)
+
+    # This regex will sometimes produce groups of just text, so merge subsequent groups until
+    # each group contains a number. This could be done in a more complex regex,
+    # but a loop is pretty simple.
+    results = []
+    for result in quantities:
+        if results and not contains_number(results[-1]):
+            results[-1] = results[-1] + result
+        else:
+            results.append(result)
+    return results
+
 
 @log_debug
 def condition_finder(text_in: str) -> List[str]:
@@ -89,7 +116,8 @@ def condition_finder(text_in: str) -> List[str]:
             result = re.split("@", text)
             out2 += [t.strip() for t in result]
         else:
-            out2.append(text)
+            result = split_on_quantities(text)
+            out2 += result
 
     return [text.strip() for text in out2]
 

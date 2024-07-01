@@ -14,6 +14,7 @@ examples = [
     ['40°F', Quantity('40 degF')],
     ['20.80 mmHg', Quantity('20.80 mmHg')],
     ['20.80 mm Hg', Quantity('20.80 mmHg')],  # correcting a unit that pint gets wrong
+    ['10%', Quantity('10 %')],
 
     # scientific notation
     ["15*10**2 s", Quantity("15*10**2 s")],  # standard
@@ -76,7 +77,11 @@ examples = [
      [[Quantity('18 mmHg'), Quantity('68 degF')], [Quantity('20 mmHg'), Quantity('77 degF')]]],
     ["Low threshold= 13.1150 mg/cu m; High threshold= 26840 mg/cu m; Irritating concn= 22875 mg/cu m.",
      Quantity('22875 mg/m**3')],
-    ['Melting point: 75% -17.5 °C; 80% 4.6 °C; 85% 21 °C.', Quantity("4.6 degC")],
+    ['Melting point: 75% -17.5 °C; 80% 4.6 °C; 85% 21 °C.', [
+        [Quantity('75%'), Quantity('-17.5 degC')],
+        [Quantity("80%"), Quantity('4.6 degC')],
+        [Quantity("85%"), Quantity('21 degC')],
+    ]],
 
     # ranges
     ['115.2-115.3 °C', Quantity('115.2 degC')],
@@ -92,10 +97,10 @@ examples = [
     ['4.0 °C [39.2 g/[mol * s] approx.] - closed cup', [[Quantity("4 degC"), Quantity("39.2 g/(mol * s)")]]],
     ['4.0 °C [39.2g/[mol*s] approx.] - closed cup', [[Quantity("4 degC"), Quantity("39.2 g/(mol * s)")]]],
     ['4.0 °C [39.2g/[mol*s]approx.] - closed cup', [[Quantity("4 degC"), Quantity("39.2 g/(mol * s)")]]],
-    ['Detection in water: 0.73 ppm; Chemically pure', Quantity("0.73 part_per_million")],
-    ['Odor Threshold Range: 0.15 to 25 ppm', Quantity("0.15 part_per_million")],
-    ["0.05 ppm purity specified", Quantity("0.05 part_per_million")],
-    ["Odor detection in air, 0.05 ppm (purity not specified)", Quantity("0.05 part_per_million")],
+    ['Detection in water: 0.73 ppm; Chemically pure', Quantity("0.73 ppm")],
+    ['Odor Threshold Range: 0.15 to 25 ppm', Quantity("0.15 ppm")],
+    ["0.05 ppm purity specified", Quantity("0.05 ppm")],
+    ["Odor detection in air, 0.05 ppm (purity not specified)", Quantity("0.05 ppm")],
     ["Relative density (water = 1): 1.04-1.13", Quantity("1.04")],
     ["Density approximately 6.5 lb / gal.", Quantity("6.5 lb/ gal")],
 
