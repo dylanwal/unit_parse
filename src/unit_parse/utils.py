@@ -75,7 +75,7 @@ def remove_empty_str(list_in: List[Any]) -> List[Any]:
 def contains_number(obj_in: str) -> bool:
     """ Checks list to see if it has a number in it anywhere."""
     if isinstance(obj_in, str):
-        return bool(re.search('\d', obj_in))  # noqa: W605
+        return bool(re.search(r'\d', obj_in))
     else:
         raise TypeError
 

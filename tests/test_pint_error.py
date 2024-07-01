@@ -1,5 +1,3 @@
-import pytest
-
 import pint
 
 from unit_parse import parser

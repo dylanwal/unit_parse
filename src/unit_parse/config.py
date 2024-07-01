@@ -48,9 +48,7 @@ def check_for_pint():
 
     # if no pint found, load local
     import pint
-    current_path = os.path.dirname(os.path.realpath(__file__))
-    u_ = pint.UnitRegistry(autoconvert_offset_to_baseunit=True,
-                           filename=os.path.join(current_path, "support_files", "default_en.txt"))
+    u_ = pint.UnitRegistry(autoconvert_offset_to_baseunit=True)
     u_.default_format = "~"
     return u_
 
@@ -99,8 +97,8 @@ class Config:
             ["°C", "degC"],  # eliminates issue with capitalization step
             ["(?<=[0-9]{1})[ ]{0,1}X[ ]{0,1}(?=[0-9]{1})", "*"],  # unify multiplication symbols
             ["(?<=[0-9]{1})[ ]{0,1}x[ ]{0,1}(?=[0-9]{1})", "*"],  # unify multiplication symbols
-            ["\[", "("],  # noqa: W605 # make all brackets parenthesis
-            ["\]", ")"],  # noqa: W605 # make all brackets parenthesis
+            [r"\[", "("],  # make all brackets parenthesis
+            [r"\]", ")"],  # make all brackets parenthesis
             ["^.*={1}", ""],  # delete everything in front of equal
             ["^.*:{1}", ""],  # delete everything in front of collen
             ["( to )", "-"],  # unify how range are represented
