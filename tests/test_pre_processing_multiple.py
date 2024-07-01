@@ -35,6 +35,8 @@ test_condition_finder = [  # [Input, Output]
     ['18 mm Hg @ 68 °F ', ['18 mm Hg', '68 °F']],
     ['20 mm Hg @ 77° F', ['20 mm Hg', '77° F']],
     [' 20 mm Hg @ 77° F (NTP, 1992)', ['20 mm Hg', '77° F', 'NTP, 1992']],
+    ['Melting point: 75% -17.5 °C', ['Melting point: 75%', '-17.5 °C']],
+    ['20.8 mm Hg 25 °C', ['20.8 mm Hg', '25 °C']],
 
     ['40 °F (4 °C) (Closed cup)', ['40 °F', '4 °C', 'Closed cup']],
     ['40 °F (4 °C)', ['40 °F', '4 °C']],
@@ -45,7 +47,6 @@ test_condition_finder = [  # [Input, Output]
     ['(4 °C Closed cup)', ['4 °C Closed cup']],
 
     # negative control (fails)
-    ['20.8 mm Hg 25 °C', ['20.8 mm Hg 25 °C']],
     ['20.8 mm Hgat25 °C', ['20.8 mm Hgat25 °C']],
     ['Pass me a 300 ml beer.', ['Pass me a 300 ml beer.']],
     ["42.3 gcm-3", ["42.3 gcm-3"]],
