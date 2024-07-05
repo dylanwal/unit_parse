@@ -1,6 +1,10 @@
 import pytest
 
-from unit_parse.core import *
+from unit_parse.core import Quantity, Unit
+from unit_parse.core import frame_shift
+from unit_parse.core import get_quantity, get_unit, get_value
+from unit_parse.core import last_minute_sub, merge_split_text
+from unit_parse.core import split_on_division_symbol, split_on_multiplication_symbol, split_on_powers
 
 test_get_value = [  # [Input, Output]
     # positive control (works)
@@ -166,8 +170,8 @@ test_to_quantity = [  # [Input, Output]
     ['4.0 °C', Quantity("4 degC")],
     [' 4.0 °C', Quantity("4 degC")],
     ['4.0', Quantity("4")],
-    ['−66.11*10**-62 cm**3/mol', Quantity('−66.11*10**-62 cm**3/mol')],
-    ['−66.11*10**+62 cm**3/mol', Quantity('−66.11*10**62 cm**3/mol')],
+    ['-66.11*10**-62 cm**3/mol', Quantity('-66.11*10**-62 cm**3/mol')],
+    ['-66.11*10**+62 cm**3/mol', Quantity('-66.11*10**62 cm**3/mol')],
     ['10e1 g/mol', Quantity('10e1 g/mol')],
     ['4.0 °C (39.2g/(mol*s)approx.) - closed cup', Quantity("4* degC")],
     ['300 ml beer.', Quantity("300 ml")],
