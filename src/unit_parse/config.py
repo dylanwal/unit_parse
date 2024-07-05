@@ -91,8 +91,9 @@ class Config:
             ["(?<=[^a-zA-Z])at([^a-zA-Z])", " @ "],  # replace at with @
             ["−", "-"],  # unify dash (long, short) symbols
             ["·", "*"],  # unify multiplication symbols
-            ["° F", " °F"],  # pint gets confused (degree farad)
-            ["° C", " °C"],  # pint gets confused
+            ['ºC', 'degC'],  # pint gets confused
+            ["° F", "degF"],  # pint gets confused (degree farad)
+            ["° C", "degC"],  # pint gets confused
             ["°F", "degF"],  # eliminates issue with capitalization step
             ["°C", "degC"],  # eliminates issue with capitalization step
             ["(?<=[0-9]{1})[ ]{0,1}X[ ]{0,1}(?=[0-9]{1})", "*"],  # unify multiplication symbols
@@ -101,6 +102,7 @@ class Config:
             [r"\]", ")"],  # make all brackets parenthesis
             ["^.*={1}", ""],  # delete everything in front of equal
             ["^.*:{1}", ""],  # delete everything in front of collen
+            ["±[ ]*[1-9.]+[ ]*", ""],  # delete the +- range
             ["( to )", "-"],  # unify how range are represented
             ["(?<=[a-zA-Z])-(?=[a-zA-Z])", " "],  # turn dashes between text into spaces so dictionary can remove
             ["mm Hg", "mmHg"],  # pint gets confused

@@ -88,6 +88,10 @@ examples = [
     ['115.2 - 115.3 °C', Quantity('115.2 degC')],
     ["1-2 °C",  Quantity('1 degC')],
     ["0-1 °C",  Quantity('0 degC')],
+    ["10-20 ºC", Quantity('1e-20 degC')],
+    ["11-20 ºC", Quantity('11 degC')],
+    ["15 ± 5 ºC", Quantity('15 degC')],
+    ["Between 10 and 20 ºC", Quantity('10 degC')],
 
     # words
     ["8.20x10+1 ppm; pure", Quantity("8.20*10**1 ppm")],
