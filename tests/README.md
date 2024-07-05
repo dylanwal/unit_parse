@@ -41,7 +41,7 @@ Run this in the terminal:
 `pip install build`
 `pip install twine`
 
-`py -m build`
+`python -m build`
 
 `twine upload dist/*`
 

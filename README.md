@@ -228,6 +228,8 @@ Yep, there's alot of them!
 # ranges
     115.2-115.3 °C --> 115.2 °C
     115.2 - 115.3 °C --> 115.2 °C
+    15 ± 5 ºC --> 15 °C
+    Between 10 and 20 ºC --> 10 °C
 # words
     8.20x10+1 ppm; pure --> 82.0 ppm
     40 °F (NTP, 1992) --> 40 °F
@@ -257,6 +259,7 @@ Stuff it gets wrong. No one is perfect!
 Index of refraction: 1.50920 @ 20 °C/D --> [[1.5092, <Quantity(293.15, 'kelvin / debye')>]]
 Vapor pressure, kPa at 20 °C: 2.0 --> 2.0
 Specific optical rotation @ 15 °C/D + 230 deg (concn by volume = 1.8 in chloroform) --> 1.8
+10-20 ºC --> 1e-20 °C   # range interpreted as scientific notation if first number is 10
 ```
 
 ---
