@@ -112,7 +112,6 @@ class Config:
             ["cu m", "m**3"],  # pint gets confused
             ["cu cm", "cm**3"],  # pint gets confused
             ["cu mm", "mm**3"],  # pint gets confused
-            ["[0-9]{1,5} ?%", ""]
         ]
 
         self.pre_proc_split = [";"]
